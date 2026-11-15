@@ -1,0 +1,45 @@
+CONTENTS
+
+Uncle Bernie's "Rendering Of Microsoft 6502 BASIC" tarball contains:
+
+-r--------   1921 Dec 25 13:52 CONTENTS      --- this file
+-r--------  11143 Dec 25 12:55 README        --- Instructions, a MUST READ
+-r--------   2508 Dec 24 15:20 LICENSE       --- Uncle Bernie's LICENSE for you
+drwx------   4096 Dec 25 10:55 MSBASIC/      --- Microsoft's published original
+drwx------   4096 Dec 24 14:36 OSI/          --- contains ROM3.BIN, to fix the
+                                                 OSI Garbage Collection Bug
+
+Executables (if needed, these can be rebuilt from their sources):
+
+-r-x------  12872 Dec 24 15:21 hexdump*      --- compiled from hexdump.c
+-r-x------ 250920 Dec 24 13:17 ub_dasm*      --- upgraded DASM executable
+-r-x------    238 Dec 25 11:50 testrun*      --- shell script for test runs
+
+Source Files:
+
+-r--------   2073 Dec 24 13:50 hexdump.c     --- source  for hexdump tool
+drwx------   4096 Dec 25 11:08 DASM_UPGRADE/ --- sources for DASM upgrades
+
+Makefile
+
+-r--------    263 Dec 24 14:32 Makefile      --- make tools, tests, clean
+
+Rendered source code for Microsoft's 6502 BASIC:
+
+-r-------- 333923 Dec 25 13:46 MSB6502.asm   --- for fully upgraded DASM
+-r-------- 333469 Dec 25 13:48 MSB6502.alt   --- for DASM upgraded with DCX only
+
+'Include' source code to complete the above source code:
+
+-r--------   7174 Dec 24 13:25 applesoft.head --- needed for    APPLE target
+-r-------- 295983 Dec 24 13:25 applesoft.tail --- non Microsoft parts - " -
+-r--------   2193 Dec 21 14:17 pet1.tail      --- PET BASIC1 patches
+
+Reference hex dumps from ROM dumps (used to verify source code match):
+
+-r--------  53760 Dec 21 13:56 apl.ref        --- for APPLE target
+-r--------  38570 Dec 24 13:33 kim.ref        --- for KIM   target
+-r--------  34650 Dec 24 13:33 osi.ref        --- for OSI   target
+-r--------  38010 Dec 24 13:18 pet1.ref       --- for PET   target (BASIC 1)
+
+END CONTENTS

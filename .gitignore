@@ -1,0 +1,6 @@
+build
+dasm-build
+merlin-src/MSBASOBJ
+merlin-src/MSBASOBJ_*
+dasm-src/*.out
+dasm-src/*.lst

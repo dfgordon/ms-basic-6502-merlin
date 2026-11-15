@@ -1,0 +1,230 @@
+Note from DFG - there were small changes made to Uncle Bernie's DASM source code.
+This turned out to be necessary to assemble "uninteresting" target cases that I
+wanted to try neverthless. `MSB6502-ub.asm` is the original, `MSB6502-dfg.asm`
+is the updated one. One reason for doing this is to compare Merlin and DASM
+object code for a wider range of switchbox settings.
+
+Uncle Bernie's text follows.
+
+README file for:
+
+Uncle Bernie's rendering of the official Microsoft 6502 BASIC Source code
+
+This rendered source code has been translated from DEC MACRO-10 syntax to a
+syntax that is compatible with most modern 6502 macro assemblers, or can easily
+be adapted to any macro assembler of your choice.
+
+Parts which were missing from the original source code and associated switches
+were added so the rendered source code can generate a matching binary for KIM-1,OSI Superboard II, PET 2001 and Apple II plus.
+
+See the 'MSB6502.asm' source file for more information on how this was done and
+how the target systems can be chosen.
+
+CHOICE OF THE DASM ASSEMBLER - BUT IT NEEDS UPGRADES
+
+I started this work using the 'ATASM' assembler which served me well for many
+decades and was used for all my 6502 coding work including all the work I did
+for the Apple-1. Alas, ATASM crashes with a 'Segmentation Fault' whenever live
+code (6502 instructions) is assembled into the zero page. As I don't have the
+time to fix such bugs in third party software, I looked for a close enough
+relative of 'ATASM' and found 'DASM', which is quite popular in the Atari VCS
+coder community (yes, there are still people out there who write new games for
+the VCS, one of the earliest 6502 based TV game consoles). It also looks as if
+'DASM' grew out of 'ATASM' or at least used 'ATASM' as an inspiration. Another
+plus for DASM is that it can be compiled on many host systems, not only on
+Linux, which is very helpful. Alas, 'DASM' lacks some features of 'ATASM'.
+
+So, assembly of 'MSB6502.asm' in the presented from requires the DASM assembler
+and some minor upgrades to DASM itself which are trivial and clean, but were
+rejected by the DASM team, who spent more time on arguing with me than what they
+would have needed to put my ready made upgrades I gave to them into DASM.
+
+NICE TO HAVE UPGRADES OF DASM (AND WHY) BUT NOT BEING MANDATORY
+
+In particular, they disliked my added features to allow line numbers in the
+source file, and the '|' character to identify block nesting levels which IMHO
+are impossible to follow for human readers unless such a 'crutch' is provided.
+
+I had to write an automatic tool to parse the original source code and to
+translate it into the initial rendered form with the more modern .IF / .ELSE /
+.ENDIF constructs. The MACRO-10 bracketing for code blocks used '<' and '>'
+which is unreadable for humans as soon as the nesting level gets too deep.
+
+However, this added feature is not mandatory, as I've provided an alternate
+source file 'MSB6502.alt' without line numbers and the '|' helpers for the
+nesting level. It is just more difficult to read and the missing line numbers
+which refer to the lines in the original source file are lost, which makes any
+reference to the original source file more tedious and error prone.
+(You can see that my added features indeed do have their merits for this task)
+
+MANDATORY UPGRADE TO DASM - ADD TWO LINES IN DASM SOURCE CODE
+
+One added feature for DASM is mandatory, and this is the introduction of the
+DCX directive. Which like DC takes a string, and dumps it into the object code,
+but it sets the MSB of the last character, a feature which the original DASM
+lacks, but is required for the assembly of Microsoft 6502 BASIC.
+
+Adding DCX to DASM only involves adding two lines of code, one line each in the
+source files globals.c and ops.c and for me it is unfathomable why the DASM team
+would no do this. Maybe they are afraid of the code in ops.c which IMHO is quite
+weird and suspicious. It looks like a bunch of hacks which were piled upon an
+earlier very crude and primitive version of the v_dc() function and no one dares
+to touch it anymore. I did dare to do this:
+
+UPGRADED DASM EXECUTABLE PROVIDED
+
+The "ub_dasm" executable in the tarball has all the upgrades, but it might not
+run on all versions of Linux, depending on 32 bit vs 64 bit machine and which
+libraries are present. If you run into such a problem, or if you want to avoid
+executables you didn't compile from the sources, here is the way out:
+
+HOW TO GET AND UPGRADE DASM
+
+The DASM source code can be obtained from:
+
+https://github.com/dasm-assembler/dasm
+
+and in my own experience it compiles fine and without any problems on Linux.
+After you got a successful compile, add the upgrades found in subdirectory
+DASM_UPGRADE of this tarball. Despite I have provided '.ed' files, do not use
+'patch' but do the edits to main.c, global.c and ops.c manually ... this will
+save you pitfalls with future versions of DASM where line numbers etc. may be
+different. (It would have been much easier for all of us if the DASM team had
+decided to add my upgrades, but you may try to nudge them into doing that, by
+going to the above github page, click on 'Issues' and open a new one, and tell
+them (politely) that you want 'Uncle Bernie's upgrades' included in the main
+source tree of DASM. My initial request was fruitless, see here:
+
+https://github.com/dasm-assembler/dasm/issues/157
+
+I still wonder why ... "Not invented here syndrome" ? Being afraid of the weird code in their 'ops.c' ? - - - it can't be lack of time because they spent more
+time writing up arguments to reject my request than it would have taken them to
+adopt my ready made and absolutely perfect and bug free source code upgrades.
+
+MAKING TOOLS AND TESTING YOUR INSTALLATION
+
+Once you have put the upgraded DASM executable into the directory with the rest
+of this tarball, enter the commands:
+
+make tools
+make tests
+
+and watch out if there are any complaints. You want to see a *** MATCH *** after
+each target. You can also give the command:
+
+ll *.diff
+
+after the run, and there should be no such files. If a diff file is found, then
+there was a mismatch between the reference file (name.ref) and the hexdump file
+(name.hex) generated for the target with 'name'. The use of hexdumps helps you
+to find where the problem is. For binary files, 'diff' only tells you if the
+binary files are different or not. This is not very helpful.
+
+CLEANING UP
+
+The command:
+
+make clean
+
+will remove all the files generated by the test run.
+
+GENERATING ROM IMAGES FOR EPROM BURNING OR FOR EMULATORS
+
+This capability is not provided in this tarball, because it's not needed for the
+educational purpose of this work. My intent was to provide you with a modernized
+and better human readable version of Microsoft's original source code, so you
+can study it to gain understanding how Microsoft 6502 BASIC works.
+
+IMHO it is pointless to use this work to make yet another set of ROM images,
+because all of them can be found on the web and all emulators for KIM-1, OSI,
+PET and Apple II come with such images, which contain the same code as could be
+generated by using this work.
+
+But, if you want to port Microsoft 6502 BASIC to another machine, you need to
+write a small tool to generate a proper binary from the output of DASM. This
+is because the source code produces some 'active' code in the zero page, and
+DASM fills the gap between this code and the actual start of the BASIC inter-
+preter with filler bytes. Which need to be removed (along with the zero page
+stuff) to obtain a proper, lean ROM image. To write this little tool, you can
+start with the 'hexdump.c' source provided in the tarball.
+
+There is one exception: for the OSI crowd, I've provided a binary image of ROM3
+which includes my own "Garbage Collection Bug" fix. This is ROM3.BIN in the OSI
+subdirectory. Use at your own risk only. I do not claim it works under all cond-
+itions. But back in 1980 when I coded that fix, no better fix was known.
+
+TRANSLATION TO OTHER MACRO ASSEMBLERS
+
+If you want to translate this work to another 6502 macro assembler, feel free to
+do so. The only condition I have is that you keep all my comments in the source
+code as is, and that you don't claim that you did all this work all by yourself.
+You may add a comment such as:
+
+ Translation for the XXXXX macro assembler by YOUR_NAME
+
+... BEFORE the comment box with 'Uncle Bernie's edition ...' and AFTER the line
+number 0007 of the original Microsoft source code. This is the following line:
+
+0007         ORG     0             ; START OFF AT LOCATION ZERO.
+
+Also, try to keep all the stuff your assembler chokes on intact, just comment it
+out, in the same way I did it with the MACRO-10 commands which are not needed
+nor understood by DASM.
+
+Don't forget to publish your translation.
+
+ACKNOWLEDGEMENTS
+
+This work is based on contributions from numerous people and organisations:
+
+1. Bill Gates, Paul Allen, Monte Davidoff, and Richard W. Weiland for writing
+   the original Microsoft BASIC interpreters.
+
+2. Microsoft Corporation for releasing the original source code for Microsoft
+   6502 BASIC V1.1 on github.
+
+3. Scott Hanselman and Stacey Haffner of Microsoft for all the work to release
+   the original source code, see here for more info:
+
+https://opensource.microsoft.com/blog/2025/09/03/microsoft-open-source-historic-6502-basic
+
+4. James P. Davis for his annotated disassemby listing of the Apple II Plus
+   firmware-in-ROM which includes all the parts missing from the original 
+   Microsoft source code but are necessary to understand how the graphics
+   functions of Applesoft BASIC - and other custom functions - interface with
+   the rest of the Apple II firmware system.
+   Also look into the APPLE2.ROM.txt file for all the people Mr. Davis thanks
+   for their contributions to his disassembly work which can be found here:
+
+   https://6502disassembly.com/a2-rom/
+
+   Click on 'download the project file.ZIP' and you will get a file called:
+   'Apple II Plus ROM Disassembly.zip'
+   in which the 'APPLE2.ROM.txt' file can be found.
+
+5. Jim Butterfield for his early analysis of PET and OSI BASIC as published in
+   COMPUTE magazine around Y1980. Jim's articles provided us with the first
+   insight about zero page adresses and subroutine entry points for Microsoft
+   6502 BASIC.
+
+6. The DASM team for keeping DASM alive ... despite they rejected my upgrades,
+   because without DASM being open source and compiling out of the box on my
+   Linux machine this work would not have been possible.
+
+LICENSES
+
+A difficult topic because my work on rendering the original Microsoft 6502 BASIC
+source code into something useful with modern macro assemblers could not have
+been done without including certain parts made by third parties and found all
+over the internet. So I restrict my own LICENSE (see the LICENSE file) to the
+parts I added / wrote myself. The original unaltered Microsoft source code and
+their own LICENSE file can be found in the MSBASIC directory and is used under
+the terms of their LICENSE. Should you endavor to use any of the contents of 
+this tarball other than the parts covered by my LICENSE or Microsoft's LICENSE
+for your own purposes, do the research who owns and may have a Copyright on the
+parts not covered by said LICENSEs. This work is meant for nonprofit scholarly
+and educational purposes only, under the "Fair Use" clauses of Section 107 of
+the Copyright Act of 1976 (17 USC 107). If you live outside of the USA, check
+the laws and regulations of your country of residence.
+
+README END

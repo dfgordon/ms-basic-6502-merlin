@@ -1,0 +1,43 @@
+MIT License 
+
+    Original Microsoft 6502 BASIC source code: Copyright (c) Microsoft Corporation
+    Uncle Bernie's additions/edits/tools:      Copyright (c) 2025 by 'Uncle Bernie'
+    everything else:                           Copyright by the respective authors
+
+    For Uncle Bernie's additions/edits/tools (the "UB_Software") to the original
+    Microsoft 6502 BASIC source code, the following license is granted:
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of the UB_Software and associated documentation files (the "UB_Software"), to
+    deal in the UB_Software without restriction, including without limitation the
+    rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+    sell copies of the UB_Software, and to permit persons to whom the UB_Software
+    is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the UB_Software.
+
+    Uncle Bernie's comments in the UB_Software may not be removed or altered.
+
+    THE UB_SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE UB_SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+    THE UB_SOFTWARE.
+
+    For the LICENSE of the Original Microsoft 6502 BASIC source code, see the
+    LICENSE file of their original release to the public to be found here:
+
+    https://github.com/microsoft/BASIC-M6502
+
+    For the "everything else" parts which are coming from a multitude of sources,
+    'Uncle Bernie' can't grant you a license, but look up the README's and the
+    comments for references to where these parts came from, and follow the links
+    to find out about their licenses and conditions. If no link is given, the 
+    origin of the corresponding "everything else" part is unknown, so proceed
+    with caution and due diligence. Note that the file MSB6502.asm itself, if the
+    added parts for the PET and APPLE targets are removed, is believed to be free
+    of any third party rights (other than Microsoft's and Uncle Bernie's) but 
+    this can't be guaranteed. Use at your own risk only.

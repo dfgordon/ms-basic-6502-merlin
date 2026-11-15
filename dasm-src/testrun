@@ -1,0 +1,9 @@
+echo
+./ub_dasm MSB6502.asm -DTARGET=$1 -l$2.lst -f3 -o$2.out
+./hexdump $3 $4 -s$5 $2.out > $2.hex
+if diff $2.ref $2.hex > $2.diff; then
+ echo "*** MATCH ***";
+ rm $2.diff
+else
+ echo "*** DIFFERENCES FOUND *** ... see file '"$2".diff'"
+fi
