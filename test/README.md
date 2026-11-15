@@ -1,6 +1,17 @@
 # Testing
 
+## Automatic Tests
+
+Generally all that should be required is to carry out two steps:
+
+1. Build - run the script `build-all.ps1`
+2. Test - run the script `test-all.ps1`
+
+The following sections fill in what goes on under the hood.
+
 ## Overview
+
+The basic test strategy is:
 
 1. Compare products of Merlin 32 with ROM images from actual machines
 2. Compare products of Merlin 32 with those of DASM

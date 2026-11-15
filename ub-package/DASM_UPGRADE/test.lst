@@ -1,0 +1,26 @@
+------- FILE test.asm LEVEL 1 PASS 1
+      1  0000					      .PROCESSOR	6502
+      2  0000 ????
+      3  0000					      ORG	0
+      4  0000					      .IF	1
+      5  0000		       ea		      NOP
+      6  0001		       ea	   LAB0       NOP
+      7  0002		       43 44 c5    .LAB1      .DCX	"CDE"
+      8  0005		       c1 c2	   @LAB2      .DCX	"A", "B"
+      9  0007		       ea	   _LAB3      NOP
+     10  0008					      .ENDIF
+     11  0008							;
+     12  0008				   CPY0S      SET	LAB0
+     13  0008				   .CPY1S     SET	.LAB1
+     14  0008				   @CPY2S     SET	@LAB2
+     15  0008				   _CPY3S     SET	_LAB3
+     16  0008
+     17  0008		       00 01	   CPY0E      EQU	LAB0
+     18  0008		       00 02	   .CPY1E     EQU	.LAB1
+     19  0008		       00 05	   @CPY2E     EQU	@LAB2
+     20  0008		       00 07	   _CPY3E     EQU	_LAB3
+     21  0008
+     22  0008		       00 01	   CPY0       =	LAB0
+     23  0008		       00 02	   .CPY1      =	.LAB1
+     24  0008		       00 05	   @CPY2      =	@LAB2
+     25  0008		       00 07	   _CPY3      =	_LAB3

@@ -1,0 +1,31 @@
+
+START OF PASS: 1
+ Including file "test.asm"
+
+----------------------------------------------------------------------
+SEGMENT NAME                 INIT PC  INIT RPC FINAL PC FINAL RPC
+INITIAL CODE SEGMENT         0000                            0000                           
+----------------------------------------------------------------------
+0 references to unknown symbols.
+0 events requiring another assembler pass.
+
+--- Symbol List (sorted by symbol)
+0.CPY1                   0002                  
+0.CPY1E                  0002                  
+0.CPY1S                  0002                  
+0.LAB1                   0002              (R )
+@CPY2                    0005                  
+@CPY2E                   0005                  
+@CPY2S                   0005                  
+@LAB2                    0005              (R )
+_CPY3                    0007                  
+_CPY3E                   0007                  
+_CPY3S                   0007                  
+_LAB3                    0007              (R )
+CPY0                     0001                  
+CPY0E                    0001                  
+CPY0S                    0001                  
+LAB0                     0001              (R )
+--- End of Symbol List.
+
+Complete. (0)

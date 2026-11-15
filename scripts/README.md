@@ -29,4 +29,5 @@ For testing there are separate scripts for testing one case and testing all case
 * `test-one.ps1` tests one case given a few inputs
 * `test-all.ps1` tests several cases
 
+By "all" we mean all 9 reasonable permutations of coarse grained settings.
 See comments in the `test` directory for more.

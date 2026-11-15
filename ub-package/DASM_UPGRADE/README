@@ -1,0 +1,39 @@
+Uncle Bernie's add-ons to DASM:
+
+I've provided the original main.c, global.c, and ops.c as main.org, global.org
+and ops.org so you can check if you work with the same version of your source
+as I did. The upgraded files are main.c, global.c and ops.c in this tarball.
+I've also provided main.ed global.ed and ops.ed which are ed scripts made by
+diff.
+
+How to add the features:
+
+in main.c, function parse(), added a code block to reformat the input line into
+           something the rest of DASM likes.
+           Suggest that this code block should be turned on by a command line
+           option, but I had no time to dig any deeper into the code to do this.
+           This could prevent misinterpretation of legacy assembly code having
+           dubious constructs incompatible with the added features.
+
+in globals.c, MNEMONIC Ops[] = { gets one line more:
+    . . . 
+    { NULL, v_dc, "dc",  0, 0, {0,} }, <---- copy this line 
+    { NULL, v_dc, "dcx", 0, 0, {0,} }, <---- then paste and add 'x' to "dc"
+    . . .
+
+in ops.c, function v_dc(), add one line for the 'dcx' directive:
+
+  if(Glen && !strcmp(mne->name, "dcx")) Gen[Glen - 1] ^= 0x80;
+
+This could also be turned off by a command line option but the "dcx" in
+global.c must stay, turning it off would be possible but tedious to code.
+
+Test case: run the script 'UBtest' ... no output means all works & matches
+
+(this is the simplest test case ... I actually assemble the whole Microsoft
+ 6502 BASIC with the upgraded DASM, so I'm confident all my mods do their job)
+
+Permission to use my code snippets from this tgz file in this and future versions of DASM is hereby granted. I regard them as "public domain" stuff and claim
+no Copyright on them.
+
+ - Uncle Bernie

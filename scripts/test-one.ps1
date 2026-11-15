@@ -6,6 +6,9 @@ param (
     [Parameter(Mandatory)]
     [string]$target_name,
     [Parameter(Mandatory)]
+    [ValidateSet('web','dasm')]
+    [string]$ref_type,
+    [Parameter(Mandatory)]
     [Uint16]$starting_address,
     [int]$MaxErrorsToShow = 10
 )
@@ -81,7 +84,7 @@ if (-not (Test-Path -Path ".\merlin-src" -PathType Container)) {
 }
 
 $outFile = "build/$target_name.out"
-$refFile = "test/$target_name.web.ref"
+$refFile = "test/$target_name.$ref_type.ref"
 $missingFiles = $false
 
 if (-not (Test-Path -Path $outFile -PathType Leaf)) {

@@ -1,11 +1,3 @@
-Note from DFG - there were small changes made to Uncle Bernie's DASM source code.
-This turned out to be necessary to assemble "uninteresting" target cases that I
-wanted to try neverthless. `MSB6502-ub.asm` is the original, `MSB6502-dfg.asm`
-is the updated one. One reason for doing this is to compare Merlin and DASM
-object code for a wider range of switchbox settings.
-
-Uncle Bernie's text follows.
-
 README file for:
 
 Uncle Bernie's rendering of the official Microsoft 6502 BASIC Source code

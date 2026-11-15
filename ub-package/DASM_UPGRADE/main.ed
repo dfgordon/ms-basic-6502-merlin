@@ -1,0 +1,62 @@
+1269a
+
+    // Additions by 'Uncle Bernie' 15th November 2025:
+    //
+    // We allow line numbers beginning at buf[0] and turn them into spaces. 
+    // As yet another feature, we also turn '|' characters at the beginning
+    // of the line into spaces. This allows source code showing nesting of
+    // conditional levels. Necessary to make Microsoft BASIC human readable ;-)
+    //
+    // Now we got us a complication with labels or symbols not beginning at
+    // buf[0] and this needs to be adjusted by detecting such labels and
+    // move them to buf[0]. Detected / supported patterns: 
+    //
+    //  label:
+    // .label:
+    // @label:
+    // _label:
+    //  label =|SET|EQU
+    // .label =|SET|EQU
+    // @label =|SET|EQU
+    // _label =|SET|EQU
+    //
+    // No other patterns are supported. Any issues can be rectified by adding
+    // a ':' after any label which is not recognized and moved to beg[0]
+    //
+    // We also allow labels to have a '_' inside them as this is often used
+    // in the disassembly listing of AppleSoft BASIC by James P. Davis
+    //
+
+    int ch;
+    char *p, *q;
+ 
+    //printf("PARSE [%s]\n", buf);   
+    for(p = buf; ch = *p; p++) {
+     if(isdigit(ch) || (ch == '|')) *p = ch = ' ';
+     if(!isspace(ch)) break;
+    }
+    if(isalpha(*p) || (*p == '.') || (*p == '@') || (*p == '_')) {
+     //printf("LABEL test at [%s]\n", p);   
+     for(q = p + 1; ch = *q; q++) {
+      if(ch == ':') break;
+      if(isalnum(ch) || (ch == '_')) continue;
+      while(*q && isspace(*q)) q++; // skip whitespace after possible symbol
+      ch = ':'; // pretend it's a label
+      if(*q == '=') break;
+      if(!strncmp(q, "SET", 3)) break;
+      if(!strncmp(q, "EQU", 3)) break;
+      ch = 0;   // not a label 
+      break;
+     }
+     if(ch == ':') {
+      q = buf;
+      while(ch = *p++) *q++ = ch;
+      *q = '\0';
+     }
+    }
+    //printf("FINAL [%s]\n", buf);   
+    // End of additions by 'Uncle Bernie' 15th November 2025
+.
+31a
+#include <ctype.h>   // Uncle Bernie
+.

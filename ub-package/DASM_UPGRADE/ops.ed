@@ -1,0 +1,7 @@
+850a
+         if(Glen && !strcmp(mne->name, "dcx")) Gen[Glen - 1] ^= 0x80; // Uncle Bernie
+.
+785a
+
+.
+765,766d
