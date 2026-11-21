@@ -18,13 +18,71 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Merlin 32
-        uses: digarok/install-merlin32-action@main
-        # Optional: pin a specific version (default is v1.1.10)
-        # with:
-        #   version: v1.1.10
+# There is a nice action from Dagen Brock (digarok) that could replace this mess, but we
+# found that it uses a Merlin 32 fork that fails to assemble in this case.
+# GROK wrote the below code.
+      - name: Install official Merlin 32 (Brutal Deluxe v1.2)
+        shell: pwsh
+        run: |
+          $url = "https://brutaldeluxe.fr/products/crossdevtools/merlin/Merlin32_v1.2.zip"
+          $zip = "$env:RUNNER_TEMP/Merlin32_v1.2.zip"
+          $extract = "$env:RUNNER_TEMP/merlin32-extract"
+          $binDir = "$env:RUNNER_TEMP/merlin32-bin"
 
-      - name: Verify Merlin 32 is on PATH
+          New-Item -ItemType Directory -Force -Path $extract, $binDir | Out-Null
+
+          Invoke-WebRequest -Uri $url -OutFile $zip
+          Expand-Archive -Path $zip -DestinationPath $extract -Force
+
+          # Determine which platform folder patterns to look for
+          $folderPatterns = if ($IsWindows) {
+            @('(?i)win(dows)?', '(?i)win')
+          } elseif ($IsMacOS) {
+            @('(?i)mac(os|osx)?', '(?i)darwin', '(?i)osx')
+          } elseif ($IsLinux) {
+            @('(?i)linux', '(?i)ubuntu')
+          } else {
+            throw "Unsupported platform"
+          }
+
+          # Find a matching platform directory
+          $platformDir = Get-ChildItem -Path $extract -Recurse -Directory |
+                         Where-Object {
+                           $name = $_.Name
+                           $folderPatterns | Where-Object { $name -match $_ }
+                         } |
+                         Select-Object -First 1
+
+          if (-not $platformDir) {
+            throw "Could not find a platform folder matching: $($folderPatterns -join ', ')"
+          }
+
+          Write-Host "Using platform folder: $($platformDir.FullName)"
+
+          # Find the binary inside that folder (case-insensitive)
+          $bin = Get-ChildItem -Path $platformDir.FullName -Recurse -File |
+                 Where-Object { $_.Name -match '(?i)^Merlin32(\.exe)?$' } |
+                 Select-Object -First 1
+
+          if (-not $bin) {
+            throw "Could not find Merlin32 binary inside $($platformDir.FullName)"
+          }
+
+          # Always install under the lowercase name "merlin32"
+          $destName = if ($IsWindows) { "merlin32.exe" } else { "merlin32" }
+          $dest = Join-Path $binDir $destName
+
+          Copy-Item -Path $bin.FullName -Destination $dest -Force
+
+          if ($IsLinux -or $IsMacOS) {
+            chmod +x $dest
+          }
+
+          # Add the directory containing the normalized binary to PATH
+          echo $binDir | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          Write-Host "Installed as: $dest (from $($bin.FullName))"
+
+      - name: Verify Merlin 32
         shell: pwsh
         run: merlin32 -h
 
