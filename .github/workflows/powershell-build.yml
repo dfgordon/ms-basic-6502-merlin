@@ -26,7 +26,7 @@ jobs:
 
       - name: Verify Merlin 32 is on PATH
         shell: pwsh
-        run: merlin32
+        run: merlin32 -h
 
       - name: Run build-all.ps1
         shell: pwsh
