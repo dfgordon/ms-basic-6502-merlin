@@ -1,0 +1,29 @@
+name: Build and Test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+      fail-fast: false   # continue other platforms even if one fails
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run build-all.ps1
+        shell: pwsh
+        working-directory: ${{ github.workspace }}
+        run: ./scripts/build-all.ps1
+
+      - name: Run test-all.ps1
+        shell: pwsh
+        working-directory: ${{ github.workspace }}
+        run: ./scripts/test-all.ps1
