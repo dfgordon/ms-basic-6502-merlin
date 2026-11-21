@@ -10,7 +10,7 @@ if (-not (Test-Path -Path ".\merlin-src" -PathType Container)) {
 
 # Find Merlin in the path with allowance for versioned names.
 # Policy is simply to take the first match.
-$exePattern = "^Merlin32(-v[0-9]\.[0-9]?)?(\.exe)?$"
+$exePattern = "(?i)^Merlin32(-v[0-9]\.[0-9]?)?(\.exe)?$"
 $matchedApp = Get-Command -CommandType Application -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -match $exePattern } |
     Select-Object -First 1

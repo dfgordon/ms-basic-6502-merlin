@@ -10,13 +10,23 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-      fail-fast: false   # continue other platforms even if one fails
+      fail-fast: false
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Install Merlin 32
+        uses: digarok/install-merlin32-action@main
+        # Optional: pin a specific version (default is v1.1.10)
+        # with:
+        #   version: v1.1.10
+
+      - name: Verify Merlin 32 is on PATH
+        shell: pwsh
+        run: merlin32
 
       - name: Run build-all.ps1
         shell: pwsh
