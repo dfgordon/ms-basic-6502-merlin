@@ -8,8 +8,8 @@
 * DFG - this is the baseline Microsoft BASIC module, which is standalone
 * for KIM and OSI, but imports additional code for Commodore PET and Apple II.
 * This is a port from "Uncle Bernie's" DASM rendering
-* to Merlin 32. My comments are preceded by DFG. Uncle Bernie's are
-* followed by UB except where modern origin is obvious.
+* to Merlin 32. My comments are preceded by DFG. Uncle Bernie's can
+* be identified by UB or simply by looking for any lower case.
 * All others are supposed to be original Microsoft comments.
 * Some Merlin 32 issues are noted inline. Global notes are:
 * (i) Forward referencing rules are restrictive relative to DASM
@@ -22,7 +22,7 @@
 *
 * About AI: it was not used much for 6502 code.
 * You can search for word-bounded case sensitive AI to find where it was used anywhere in the project.
-* AI was used extensively to develop build and test scripts.
+* AI was used extensively to develop scripts for building and testing.
 
 *****************************************************************************
 *                                                                           *
@@ -38,7 +38,7 @@
 
 * This work was done in the hope that 6502 aficionados of Y2025 and posterity
 * find it useful for studying and modifying Microsoft 6502 BASIC using standard
-*   02 macro assemblers who choke on the original source code as published and
+* 6502 macro assemblers who choke on the original source code as published and
 * given to the world by Microsoft here:
 *
 * https://github.com/microsoft/BASIC-M6502
@@ -173,7 +173,7 @@
 * user. A very primitive solution which has the advantage that OSI BASIC is the
 * most easy version of Microsoft 6502 BASIC to port to homebrewed machines.
 * OSI BASIC is interesting for yet another reason: it reflects V1.0 of Microsoft
-*   02 BASIC, and so, if the OSI switch is activated, the published original
+* 6502 BASIC, and so, if the OSI switch is activated, the published original
 * source, which is V1.1, reverts back to V1.0, the much earlier version of
 * Microsoft's 6502 BASIC, for which Microsoft did not publish the source (yet).
 * Do not forget the infamous "Garbage Collection Bug" - without the fix, OSI
@@ -199,7 +199,8 @@
 * This has not been tried or tested, as the actual target machine could not be
 * identified, and no ROM images for checks could be found.
 *
-* DFG - just a guess - STM = standard microsoft? Maybe just a baseline for whatever...
+* DFG - According to Michael Steil's blog this is likely Semi-Tech Microelectronics,
+* who never actually shipped a 6502-based computer.
 *
 * HOW TO PREPARE ASSEMBLY FOR A TARGET SYSTEM
 *
@@ -212,14 +213,12 @@
 
          PUT   switchbox
 
-         DO    swAPPLE2
-         PUT   apple.ext.head
-         FIN
-
-* DFG - the "Applesoft tail" is now treated as a module.
+* DFG - Imports and Exports for the Apple Extension Modules.
+* In the UB package this was handled using two includes.
 * We tried to put all imports/exports in the below block, but
 * Merlin 32 behaviors lead us to:
-* (1) ZP locations are pulled from symbol table and put into a header file
+* (1) ZP locations are provided to the extensions as equivalences in a header file.
+*     N.b. this means the ZP dummy section and the header file have to be manually harmonized.
 * (2) CRDO entry had to be entered inline in the code
          DO    swAPPLE2
 
@@ -238,7 +237,7 @@
 * either inline or in a header.
 *         ENT   LINNUM,PRGEND,STREND,MEMSIZ,FRETOP,VARTAB
 *         ENT   TXTPTR,CURLIN,LOWTR,FAC,DSCTMP,SUBFLG
-*         ENT   BUF
+*         ENT   BUF,AMPERV
 
 * DFG - tokens to export to Apple
 * There is a Merlin 32 issue here where this will induce an inline entry
@@ -271,6 +270,7 @@
 * However testing only verifies the following:
 *   (i) the assembler produces output consistent with UB's original reference images
 *   (ii) DASM and Merlin 32 produce the same output for the 9 possible coarse grained settings
+* N.b. unreferenced symbols are not exhaustively guarded by conditionals.
 
 * -------- Open settings for the PDP-10 simulator --------
          DO    REALIO=valSim
@@ -298,7 +298,7 @@ swGOEND  EQU   1          ; DFG - added this switch to allow GOEND handling in M
          FIN
 * -------- Close PDP-10 simulator --------
 
-* -------- Open settings for STM (standard microsoft?) --------
+* -------- Open settings for STM --------
          DO    REALIO=valSTM
 EXTIO    EQU   0          ; EXTERNAL I/O.
 LONGI    EQU   1          ; LONG INITIALIZATION SWITCH.
@@ -382,7 +382,7 @@ FCELIM   EQU   10
 CQTIMR   EQU   $200
 CQSTAT   EQU   $20C
 CQHTIM   EQU   $9044
-swGOEND  EQU   0          ; direct to ENDCON
+swGOEND  EQU   0          ; DFG - direct to ENDCON
 * DFG - equating ZERO to CON_ZERO was removed and is now
 * handled by conditionals at the point of the only 2 references
          FIN
@@ -449,7 +449,7 @@ ADDPRC   EQU   0
 INTPRC   EQU   0
 DISKO    EQU   1
 GETCMD   EQU   0
-swGOEND  EQU   0          ; direct to ENDCON
+swGOEND  EQU   0          ; DFG - direct to ENDCON
 FCELIM   EQU   10
 REMSTK   EQU   $FC
 PI       EQU   $FF
@@ -485,6 +485,10 @@ BUFLEN   EQU   240
 STKEND   EQU   507
 LNGERR   EQU   1
 DISKO    EQU   1          ; added by UB
+         FIN
+* DFG - equivalences for Applesoft that are not ZP addresses
+         DO    {REALIO=valApple}*swAPPLE2
+BADRESP  EQU   254        ; DFG - moved from UB's header to here
          FIN
 * -------- Close Apple --------
 
@@ -1226,8 +1230,8 @@ CONTW    EQU   15         ; CHARACTER TO SUPPRESS OUTPUT.
 * sections for the low memory stuff. The involved Merlin 32 issues are:
 *   1. high memory bug - if we try to assemble full memory it fails
 *   2. ORG is ignored in a dummy section
-*   3. symbols seem to be evaluated only on the first pass (which can be worked around)
-*   4. wrongly and unpredictably errors out on repeated equivalences despite conditonal guards
+*   3. dummy symbols seem to be evaluated only on the first pass (which can be worked around)
+*   4. wrongly and unpredictably errors out on repeated equivalences despite conditional guards
 * The LSP issues are
 *   1. Interleaving conditional and dummy folds cause analysis to be aborted
 
@@ -1266,7 +1270,11 @@ FBUFFR   DS    3*ADDPRC+13 ; BUFFER FOR "FOUT".
          DEND
 *** END PAGE 1 ***
 
-
+*** DFG - START PAGE 3 ***
+         DUM   $03F5
+AMPERV   DS    3
+         DEND
+*** DFG - END PAGE 3 ***
 
          ORG   ROMLOC    ; BASIC interpreter ROM starts here
                           ; DFG - n.b. cases with modules will override this
@@ -1474,7 +1482,7 @@ PTDORL   DFB   100        ; PRECEDENCE.
 * SIGNIFICANT BIT ON.
 * THE LIST OF RESERVED WORDS:
 
-RESLST   DCI 'END'
+RESLST   DCI   'END'
 ENDTK    EQU   128
          DCI   'FOR'
 FORTK    EQU   ENDTK+1
@@ -2347,7 +2355,7 @@ KLOOP    LDA   ]BUFOFS,X
          BNE   KLOOP      ; ALWAYS GOES.
          FIN
          DO    swAPPLE2
-         BIT   DATAFLG
+         BIT   DORES      ; DFG - use MS symbol
          BVS   DASTATE
          FIN
 CMPSPC   CMP   #$20       ; IS IT A SPACE TO SAVE?
@@ -8213,9 +8221,9 @@ USEDEF                    ; HIGHEST ADDRESS.
          LDWDI 16190      ; A STRANGE NUMBER.
          FIN
                           ; Applesoft available RAM memory search /alloction routines
-         DO    swAPPLE2
-         LDA   #<PRGMEM   ; Get Start of Program Memory, Low (=0)
-         LDY   #>PRGMEM   ; Get Start of Program Memory, High
+         DO    swAPPLE2   ; DFG - used RAMLOC below instead of Davis symbol
+         LDA   #<RAMLOC   ; Get Start of Program Memory, Low (=0)
+         LDY   #>RAMLOC   ; Get Start of Program Memory, High
          STA   LINNUM     ; Set Memory Scan Pointer, Low,  for Zip!
          STY   LINNUM+1   ; Set Memory Scan Pointer, High, for Paging
          LDY   #$00       ; Set for Indirect Addressing of Mem Pages

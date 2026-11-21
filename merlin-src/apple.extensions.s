@@ -10,17 +10,13 @@
 * turn is derived from other sources, see comments below.
 
 * DFG - the following headers use fixed addresses, if the source
-* code is altered, these can become invalid. The `microsoft.zp`
+* code is altered, these can become invalid. The `apple.prim.head`
 * header is necessary due to Merlin 32 issues, see comments therein.
          PUT   apple.ext.head ; from UB, which in turn, is from Davis
          PUT   apple.prim.head ; derived from MSB6502 symbol table
 
-* DFG - This is defined separately in MSB6502, if it changes there
-* it must be changed here too.
-BUF      EQU   512
-
 * DFG - The following are the symbols we would like to import, but
-* instead are brought in through the `microsoft.zp` header file.
+* instead are brought in through the `apple.prim.head` header file.
 *  EXT   LINNUM,PRGEND,STREND,MEMSIZ,FRETOP,VARTAB
 *  EXT   TXTPTR,CURLIN,LOWTR,FAC,DSCTMP,SUBFLG
  

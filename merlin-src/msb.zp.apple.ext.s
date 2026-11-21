@@ -95,7 +95,7 @@ CHANNL   DS    1          ; HOLDS CHANNEL NUMBER.
          DO    NULCMD*{swOSI=0}
 NULCNT   DFB   0          ; NUMBER OF NULLS TO PRINT.
          FIN
-         DO    {swOSI=0}*{{REALIO=valPET}=0} ; Merlin 32 is not letting us use REALIO#valPET
+         DO    {swOSI=0}*{{REALIO=valPET}=0} ; DFG - Merlin 32 is not letting us use REALIO#valPET
 TRMPOS   DS    1          ; POSITION OF TERMINAL CARRIAGE.
          FIN
          DO    swOSI+swPET=0
@@ -104,6 +104,10 @@ NCMWID   DFB   NCMPOS     ; POSITION BEYOND WHICH THERE ARE
                           ; NO MORE FIELDS.
          FIN
 
+         DEND
+
+         DUM   $0024
+CH       DS    1          ; DFG - Apple's horizontal cursor
          DEND
 
 * ROOM FOR APPLE PAGE 0 STUFF. (DFG - comment has been moved)
@@ -332,5 +336,19 @@ RNDX     DFB   128        ; LOADED OR FROM ROM.
          DO    ADDPRC     ; ONE MORE BYTE.
          DFB   89
          FIN
+
+* DFG - in the following block the symbol names are taken
+* from the James P. Davis disassembly
+         DS    8
+AUTORUN  DS    1
+         DS    1
+ERRFLG   DS    1
+         DS    23
+FIRST    DS    1
+SPDBYT   DS    1
+TRCFLG   DS    1
+FLASHBIT DS    1
+         DS    4
+REMSTK   DS    1
 
          DEND

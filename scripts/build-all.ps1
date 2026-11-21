@@ -2,10 +2,24 @@
 
 # AI enhanced build script
 
+# Demand that the working directory is the project root
 if (-not (Test-Path -Path ".\merlin-src" -PathType Container)) {
     Write-Error "Please run from project directory"
     exit 1
 }
+
+# Find Merlin in the path with allowance for versioned names.
+# Policy is simply to take the first match.
+$exePattern = "^Merlin32(-v[0-9]\.[0-9]?)?(\.exe)?$"
+$matchedApp = Get-Command -CommandType Application -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -match $exePattern } |
+    Select-Object -First 1
+if (-not $matchedApp) {
+    Write-Error "Could not find Merlin 32 in the system PATH."
+    exit 1
+}
+$merlinExe = $matchedApp.Source
+Write-Host "Using executable: $merlinExe" -ForegroundColor Green
 
 # Ensure build directory exists
 if (-not (Test-Path -Path ".\build" -PathType Container)) {
@@ -44,7 +58,7 @@ foreach ($case in $cases) {
     }
 
     & "$PSScriptRoot/Set-AssemblySwitches.ps1" @params
-    Merlin32-v1.2 "merlin-src" ("merlin-src/" + $case.Src)
+    & $merlinExe "merlin-src" ("merlin-src/" + $case.Src)
 
     # Check both the exit code and whether MSBASOBJ was actually generated
     if ($LASTEXITCODE -eq 0 -and (Test-Path -Path "merlin-src/MSBASOBJ" -PathType Leaf)) {

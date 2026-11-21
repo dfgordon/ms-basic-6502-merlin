@@ -1,11 +1,12 @@
 # Elements from the UB package
 
 This is a place to put things from the "Uncle Bernie" (UB) package that don't really apply to this one.
-Everthing in this directory is directly from the UB package, except this README.
+Everything in this directory is directly from the UB package, except this README.
 For more see UB's `CONTENTS` file. Package layout differs as follows:
 
 1. Linux build products are not included here
-2. DASM assembly code is moved to `dasm-src`
+2. DASM version of the source code is moved to `dasm-src`
+3. Original `README` renamed `README-ub`
 
 ## DASM Syntax and PowerShell
 

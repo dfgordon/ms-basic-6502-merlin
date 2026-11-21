@@ -27,7 +27,7 @@ To build a specific case only, you have to do it manually.  The steps are as fol
 For testing there are separate scripts for testing one case and testing all cases:
 
 * `test-one.ps1` tests one case given a few inputs
-* `test-all.ps1` tests several cases
+* `test-all.ps1` tests all cases
 
 By "all" we mean all 9 reasonable permutations of coarse grained settings.
 See comments in the `test` directory for more.

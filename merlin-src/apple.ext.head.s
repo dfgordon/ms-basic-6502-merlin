@@ -1,4 +1,6 @@
-* applesoft.head: Applesoft header with equates (from UB package)
+* applesoft.head: Applesoft header with equates
+* DFG - In the UB package this was a global header, here
+* it is only used by the extension modules.
 *
 *                 Taken from the Applesoft Disassembly Listing made by
 *                 James P. Davis and slightly edited to avoid clashes

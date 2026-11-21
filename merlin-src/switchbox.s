@@ -25,8 +25,8 @@ REALIO   EQU   4
 * is due to the differences mentioned above. So you also have to set the KIM,
 * OSI, PET or APPLE2 switch in the switchbox.
 *
-* DFG - removed comments pertaining to DASM command line switches which have
-* been removed since they do not work with Merlin 32.
+* DFG - removed comments pertaining to DASM command line switches since they
+* do not work with Merlin 32 (if interested see `dasm-src/MSB6502*`)
 *
 * =================  Switchbox added by Uncle Bernie  ====================
 *
@@ -49,5 +49,5 @@ swKIM      EQU   0
 swOSI      EQU   0
 swOSIFIX   EQU   0
 swPET      EQU   0
-swAPPLE2   EQU   1
+swAPPLE2   EQU   0
 

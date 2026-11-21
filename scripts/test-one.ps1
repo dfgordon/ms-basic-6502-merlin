@@ -101,7 +101,7 @@ if ($missingFiles) {
     return 1
 }
 
-$hex_and_ascii = & "$PSScriptRoot/Format-Hex7bit.ps1" $outFile -Start $starting_address
+$hex_and_ascii = & "$PSScriptRoot/Format-Hex7Bit.ps1" $outFile -Start $starting_address
 $ref_and_ascii = Get-Content $refFile
 
 $hex = Remove-Extras -Text $hex_and_ascii

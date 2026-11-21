@@ -98,7 +98,7 @@ CHANNL   DS    1          ; HOLDS CHANNEL NUMBER.
          DO    NULCMD*{swOSI=0}
 NULCNT   DFB   0          ; NUMBER OF NULLS TO PRINT.
          FIN
-         DO    {swOSI=0}*{{REALIO=valPET}=0} ; Merlin 32 is not letting us use REALIO#valPET
+         DO    {swOSI=0}*{{REALIO=valPET}=0} ; DFG - Merlin 32 is not letting us use REALIO#valPET
 TRMPOS   DS    1          ; POSITION OF TERMINAL CARRIAGE.
          FIN
          DO    swOSI+swPET=0

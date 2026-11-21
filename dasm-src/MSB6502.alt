@@ -22,7 +22,7 @@
 ;
 ; This work was done in the hope that 6502 aficionados of Y2025 and posterity
 ; find it useful for studying and modifying Microsoft 6502 BASIC using standard
-;   02 macro assemblers who choke on the original source code as published and
+; 6502 macro assemblers who choke on the original source code as published and
 ; given to the world by Microsoft here:
 ;
 ; https://github.com/microsoft/BASIC-M6502
@@ -157,7 +157,7 @@
 ; user. A very primitive solution which has the advantage that OSI BASIC is the
 ; most easy version of Microsoft 6502 BASIC to port to homebrewed machines.
 ; OSI BASIC is interesting for yet another reason: it reflects V1.0 of Microsoft
-;   02 BASIC, and so, if the OSI switch is activated, the published original
+; 6502 BASIC, and so, if the OSI switch is activated, the published original
 ; source, which is V1.1, reverts back to V1.0, the much earlier version of
 ; Microsoft's 6502 BASIC, for which Microsoft did not publish the source (yet).
 ; Do not forget the infamous "Garbage Collection Bug" - without the fix, OSI

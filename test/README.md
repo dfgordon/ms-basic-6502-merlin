@@ -25,7 +25,7 @@ The full matrix of fine grained conditional assembly switch settings is too larg
 
 In these cases the reference files are taken directly from the "Uncle Bernie" (UB) tarball, but renamed.
 
-When it comes to comparing outputs of different assemblers we can compare whatever switch settings we choose.  Here we have to distinguish between the "primitive" MSBASIC source code, as opposed to the source code used by the computer vendors. This comes about because the vendors supplied their own patches and extensions. Since the original source code for patches and extensions is not available in general, it has been either reverse engineered or derived from disassembly (see comments in `dasm-src/MSB6502-ub.asm`).  In one case there is a homebrew patch from UB.  Cases and reference files are as follows:
+When it comes to comparing outputs of different assemblers we can compare whatever switch settings we choose.  Here we have to distinguish between the "primitive" MS-BASIC source code, as opposed to the source code used by the computer vendors. This comes about because the vendors supplied their own patches and extensions. Since the original source code for patches and extensions is not available in general, it has been either reverse engineered or derived from disassembly (see comments in `dasm-src/MSB6502-ub.asm`).  In one case there is a homebrew patch from UB.  Cases and reference files are as follows:
 
 1. KIM (`kim.dasm.ref`)
 2. KIM primitive (`kim.primitive.dasm.ref`)

@@ -5,7 +5,7 @@
 The file `MSB6502.S` is the heart of the package in all cases.
 
 However, in order to handle the Applesoft case as gracefully as possible, while working around
-various defects in the toolchain, the sources have been split as follows.
+various defects in the toolchain, the sources have been split as detailed below.
 
 Everything is controlled by settings in `switchbox.s`. See comments therein for more.
 
@@ -46,7 +46,6 @@ Apple extensions, and the Apple F8 ROM.
     * MSB6502.S
       - switchbox.s
       - msb.zp.apple.ext.s
-      - apple.ext.head.s
     * apple.extensions.s
       - apple.prim.head.s
       - apple.ext.head.s

@@ -16,7 +16,7 @@ valPET   EQU   3          ; Commodore PET
 valApple EQU   4          ; Apple II
 valSTM   EQU   5
 
-REALIO   EQU   valApple
+REALIO   EQU   4
 
 * ... but wait, this is not all. If you only use the REALIO setting, with all
 * switches in Uncle Bernie's switchbox set to zero, you get what the original
@@ -25,8 +25,8 @@ REALIO   EQU   valApple
 * is due to the differences mentioned above. So you also have to set the KIM,
 * OSI, PET or APPLE2 switch in the switchbox.
 *
-* DFG - removed comments pertaining to DASM command line switches which have
-* been removed since they do not work with Merlin 32.
+* DFG - removed comments pertaining to DASM command line switches since they
+* do not work with Merlin 32 (if interested see `dasm-src/MSB6502*`)
 *
 * =================  Switchbox added by Uncle Bernie  ====================
 *
@@ -49,5 +49,4 @@ swKIM      EQU   0
 swOSI      EQU   0
 swOSIFIX   EQU   0
 swPET      EQU   0
-swAPPLE2   EQU   0
-
+swAPPLE2   EQU   1
