@@ -20,7 +20,7 @@ jobs:
 
 # There is a nice action from Dagen Brock (digarok) that could replace this mess, but we
 # found that it uses a Merlin 32 fork that fails to assemble in this case.
-# GROK wrote the below code.
+# AI wrote the below code.
       - name: Install official Merlin 32 (Brutal Deluxe v1.2)
         shell: pwsh
         run: |

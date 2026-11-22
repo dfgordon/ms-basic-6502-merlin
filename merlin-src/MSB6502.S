@@ -634,9 +634,9 @@ JNE      MAC
          JMP   ]1
          EOM
 
-                          ; BRANCHES THAT ALWAYS BRANCH
-                          ; THESE ARE USED ON THE 6502 BECAUSE
-                          ; THERE IS NO UNCONDITIONAL BRANCH
+* BRANCHES THAT ALWAYS BRANCH
+* THESE ARE USED ON THE 6502 BECAUSE
+* THERE IS NO UNCONDITIONAL BRANCH
 
 BCCA     MAC
          BCC   ]1
@@ -1253,30 +1253,32 @@ VARTXT   EQU   LINNUM
 VARTXT   EQU   OPPTR      ; POINTER INTO LIST OF VARIABLES.
          FIN
 
-*** START PAGE 1 ***
          DUM   255        ; PAGE 1 STUFF COMING UP.
 LOFBUF   DS    1          ; THE LOW FAC BUFFER. COPYABLE.
 
-                          ; --  PAGE ZERO/ONE BOUNDARY ---.
+* --- PAGE ZERO/ONE BOUNDARY ---
 
                           ; MUST HAVE 13 CONTIGUOUS BYTES.
 FBUFFR   DS    3*ADDPRC+13 ; BUFFER FOR "FOUT".
                           ; ON PAGE 1 SO THAT STRING IS NOT COPIED.
 
-                          ; STACK IS LOCATED HERE. IE FROM THE END OF FBUFFR TO STKEND.
+* STACK IS LOCATED HERE. IE FROM THE END OF FBUFFR TO STKEND.
 
-                          ; PAGE
-                          ; SUBTTL     DISPATCH TABLES, RESERVED WORDS, AND ERROR TEXTS.
          DEND
-*** END PAGE 1 ***
 
-*** DFG - START PAGE 3 ***
+* --- DFG - PAGE ONE/TWO BOUNDARY ---
+* --- DFG - PAGE TWO/THREE BOUNDARY ---
+
          DUM   $03F5
 AMPERV   DS    3
          DEND
-*** DFG - END PAGE 3 ***
 
-         ORG   ROMLOC    ; BASIC interpreter ROM starts here
+* --- DFG - end of low memory stuff ---
+
+* PAGE
+* SUBTTL     DISPATCH TABLES, RESERVED WORDS, AND ERROR TEXTS.
+
+         ORG   ROMLOC     ; BASIC interpreter ROM starts here
                           ; DFG - n.b. cases with modules will override this
 
 STMDSP
@@ -1591,7 +1593,9 @@ PRINTK   EQU   REMTK+6+NULCMD+{DISKO*2}+{DISKO&{REALIO=valPET}}+{EXTIO&{swOSI=0}
          FIN
          DCI   'NEW'
 SCRATK   EQU   PRINTK+1+{REALIO=0}+1+{REALIO#valPET}+{REALIO=valPET}+{EXTIO*4}+GETCMD+1
-                          ; END OF COMMAND LIST.
+
+* END OF COMMAND LIST.
+
          DCI   'TAB('
 TABTK    EQU   SCRATK+1
          DCI   'TO'
@@ -1625,15 +1629,14 @@ GREATK   EQU   MINUTK+6
 EQLTK    EQU   GREATK+1
          DCI   '<'
 LESSTK   EQU   EQLTK+1
-                          ;
-                          ; NOTE DANGER OF ONE RESERVED WORD BEING A PART
-                          ; OF ANOTHER:
-                          ; IE . . IF 2 GREATER THAN F OR T=5 THEN...
-                          ; WILL NOT WORK!!! SINCE "FOR" WILL BE CRUNCHED!!
-                          ; IN ANY CASE MAKE SURE THE SMALLER WORD APPEARS
-                          ; SECOND IN THE RESERVED WORD TABLE ("INP" AND "INPUT")
-                          ; ANOTHER EXAMPLE: IF T OR Q THEN ... "TO" IS CRUNCHED
-                          ;
+
+* NOTE DANGER OF ONE RESERVED WORD BEING A PART
+* OF ANOTHER:
+* IE . . IF 2 GREATER THAN F OR T=5 THEN...
+* WILL NOT WORK!!! SINCE "FOR" WILL BE CRUNCHED!!
+* IN ANY CASE MAKE SURE THE SMALLER WORD APPEARS
+* SECOND IN THE RESERVED WORD TABLE ("INP" AND "INPUT")
+* ANOTHER EXAMPLE: IF T OR Q THEN ... "TO" IS CRUNCHED
          DCI   'SGN'
 ONEFUN   EQU   LESSTK+1
          DCI   'INT'
@@ -1763,9 +1766,7 @@ ERRCN    EQU   ERRST+19
 ERRUF    EQU   ERRCN+14
          FIN
 
-                          ;
-                          ; NEEDED FOR MESSAGES IN ALL VERSIONS.
-                          ;
+* NEEDED FOR MESSAGES IN ALL VERSIONS.
 ERRTXT   ASC   ' ERROR'
          DO    swAPPLE2
          DFB   $07        ; ring bell
@@ -1794,9 +1795,7 @@ BRKTXT   DFB   $0D
 * PAGE
 * SUBTTL     GENERAL STORAGE MANAGEMENT ROUTINES.
 
-*
 * FIND A "FOR" ENTRY ON THE STACK VIA "VARPNT".
-*
 FORSIZ   EQU   2*ADDPRC+16
 FNDFOR   TSX              ; LOAD XREG WITH STK PNTR.
          LUP   4          ; IGNORE ADR(NEWSTT) AND RTS ADDR.
@@ -2537,10 +2536,9 @@ AFFRTS   DEY
          BCS   FNDLNC     ; ALWAYS BRANCHES.
 FLINRT   CLC              ; C MAY BE HIGH.
 FLNRTS   RTS              ; RETURN TO CALLER.
-                          ;
-                          ; THE "NEW" COMMAND CLEARS THE PROGRAM TEXT AS WELL
-                          ; AS VARIABLE SPACE.
-                          ;
+
+* THE "NEW" COMMAND CLEARS THE PROGRAM TEXT AS WELL
+* AS VARIABLE SPACE.
 SCRATH   BNE   FLNRTS     ; MAKE SURE THERE IS A TERMINATOR.
 SCRTCH   LDA   #0         ; GET A CLEARER.
          DO    swAPPLE2
@@ -2783,7 +2781,6 @@ PRIT3    INY
 * PAGE
 * SUBTTL      THE "FOR" STATEMENT.
 
-*
 * A "FOR" ENTRY ON THE STACK HAS THE FOLLOWING FORMAT:
 *
 * LOW ADDRESS
@@ -2797,7 +2794,6 @@ PRIT3    INY
 * HIGH ADDRESS
 *
 * TOTAL 16+2*ADDPRC BYTES.
-*
 FOR      LDA   #128       ; DON'T RECOGNIZE
          STA   SUBFLG     ; SUBSCRIPTED VARIABLES.
          JSR   LET        ; READ THE VARIABLE AND ASSIGN IT
@@ -2846,17 +2842,15 @@ ONEON    JSR   SIGN       ; GET SIGN IN ACCA.
          PSHWD FORPNT     ; PUT PNTR TO VARIABLE ON STACK.
 NXTCON   LDA   #FORTK     ; PUT A FORTK ONTO STACK.
          PHA
-                          ;            BNEA NEWSTT      ;SIMULATE BNE TO NEWSTT. JUST FALL IN.
+*        BNEA NEWSTT      ;SIMULATE BNE TO NEWSTT. JUST FALL IN.
 
 * PAGE
 * SUBTTL     NEW STATEMENT FETCHER.
 
-*
 * BACK HERE FOR NEW STATEMENT. CHARACTER POINTED TO BY TXTPTR
 * IS ":" OR END-OF-LINE. THE ADDRESS OF THIS LOC IS LEFT
 * ON THE STACK WHEN A STATEMENT IS EXECUTED SO THAT
 * IT CAN MERELY DO A RTS WHEN IT IS DONE.
-*
 NEWSTT
          DO    swAPPLE2
          TSX
@@ -3222,18 +3216,17 @@ RUN      JEQ   RUNC       ; IF NO LINE # ARGUMENT.
 
 RUNLIN   JSR   CLEARC     ; CLEAN UP -- RESET THE STACK.
          JMP   RUNC2      ; MUST REPLACE RTS ADDR.
-                          ;
-                          ; A GOSUB ENTRY ON THE STACK HAS THE FOLLOWING FORMAT:
-                          ;
-                          ; LOW ADDRESS:
-                          ;       THE GOSUTK ONE BYTE
-                          ;       THE LINE NUMBER OF THE GOSUB STATEMENT TWO BYTES
-                          ;       A POINTER INTO THE TEXT OF THE GOSUB TWO BYTES
-                          ;
-                          ; HIGH ADDRESS.
-                          ;
-                          ; TOTAL FIVE BYTES.
-                          ;
+
+* A GOSUB ENTRY ON THE STACK HAS THE FOLLOWING FORMAT:
+*
+* LOW ADDRESS:
+*       THE GOSUTK ONE BYTE
+*       THE LINE NUMBER OF THE GOSUB STATEMENT TWO BYTES
+*       A POINTER INTO THE TEXT OF THE GOSUB TWO BYTES
+*
+* HIGH ADDRESS.
+*
+* TOTAL FIVE BYTES.
 GOSUB    LDA   #3
          JSR   GETSTK     ; MAKE SURE THERE IS ROOM.
          PSHWD TXTPTR     ; PUSH ON THE TEXT POINTER.
@@ -3266,10 +3259,9 @@ QFOUND   BCC   USERR      ; GOTO LINE IS NONEXISTANT.
          SBC   #0
          STA   TXTPTR+1
 GORTS    RTS              ; PROCESS THE STATEMENT.
-                          ;
-                          ; "RETURN" RESTORES THE LINE NUMBER AND TEXT PNTR FROM THE STACK
-                          ; AND ELIMINATES ALL THE "FOR" ENTRIES IN FRONT OF THE "GOSUB" ENTRY.
-                          ;
+
+* "RETURN" RESTORES THE LINE NUMBER AND TEXT PNTR FROM THE STACK
+* AND ELIMINATES ALL THE "FOR" ENTRIES IN FRONT OF THE "GOSUB" ENTRY.
 RETURN   BNE   GORTS      ; NO TERMINATOR=BLOW HIM UP.
          LDA   #255
          DO    swAPPLE2+swOSI+swKIM+swPET ; all of these machines deviate from ...
@@ -3381,7 +3373,6 @@ ONGRTS   RTS              ; EITHER END-OF-LINE OR SYNTAX ERROR.
 * PAGE
 * SUBTTL     LINGET -- READ A LINE NUMBER INTO LINNUM
 
-*
 * "LINGET" READS A LINE NUMBER FROM THE CURRENT TEXT POSITION.
 *
 * LINE NUMBERS RANGE FROM 0 TO 64000-1.
@@ -3390,7 +3381,6 @@ ONGRTS   RTS              ; EITHER END-OF-LINE OR SYNTAX ERROR.
 * "TXTPTR" IS UPDATED TO POINT TO THE TERMINATING CHARCTER
 * AND [A] = THE TERMINATING CHARACTER WITH CONDITION
 * CODES SET UP TO REFLECT ITS VALUE.
-*
 LINGET   LDX   #0
          STX   LINNUM     ; INITIALIZE LINE NUMBER TO ZERO.
          STX   LINNUM+1
@@ -3774,14 +3764,12 @@ NOTABR   JSR   CHRGET     ; REGET LAST CHARACTER.
 XSPAC1   JSR   OUTSPC
          BNEA  XSPAC2
          FIN
-                          ;
-                          ; PRINT THE STRING POINTED TO BY [Y,A] WHICH ENDS WITH A ZERO.
-                          ; IF THE STRING IS BELOW DSCTMP IT WILL BE COPIED INTO STRING SPACE.
-                          ;
+
+* PRINT THE STRING POINTED TO BY [Y,A] WHICH ENDS WITH A ZERO.
+* IF THE STRING IS BELOW DSCTMP IT WILL BE COPIED INTO STRING SPACE.
 STROUT   JSR   STRLIT     ; GET A STRING LITERAL.
-                          ;
-                          ; PRINT THE STRING WHOSE DESCRIPTOR IS POINTED TO BY FACMO.
-                          ;
+
+* PRINT THE STRING WHOSE DESCRIPTOR IS POINTED TO BY FACMO.
 STRPRT   JSR   FREFAC     ; RETURN TEMP POINTER.
          TAX              ; PUT COUNT INTO COUNTER.
          LDY   #0
@@ -3793,14 +3781,11 @@ STRPR2   DEX
          INY
          CMP   #13
          BNE   STRPR2
-                          ; CRFIN:  .EQU NEGATE
          JSR   CRFIN      ; TYPE REST OF CARRIAGE RETURN.
          JMP   STRPR2     ; AND ON AND ON.
-                          ;
-                          ; OUTDO OUTPUTS THE CHARACTER IN ACCA, USING CNTWFL
-                          ; (SUPPRESS OR NOT), TRMPOS (PRINT HEAD POSITION),
-                          ; TIMING, ETCQ. NO REGISTERS ARE CHANGED.
-                          ;
+
+* DFG - original code has the OUTDO docstring here.
+* OUTSPC outputs ASCII #29 or #32 depending on settings.
 OUTSPC
          DO    REALIO#valPET
          LDA   #$20
@@ -3816,6 +3801,10 @@ CRTSKP   LDA   #29        ; COMMODORE'S SKIP CHARACTER.
          FIN
          SKIP2
 OUTSET   LDA   #'?'
+
+* OUTDO OUTPUTS THE CHARACTER IN ACCA, USING CNTWFL
+* (SUPPRESS OR NOT), TRMPOS (PRINT HEAD POSITION),
+* TIMING, ETCQ. NO REGISTERS ARE CHANGED.
 OUTDO
          DO    REALIO*{swAPPLE2=0}
          BIT   CNTWFL     ; SHOULDN'T AFFECT CHANNEL I/O!
@@ -3908,11 +3897,9 @@ GETRTS   RTS
 * PAGE
 * SUBTTL     INPUT AND READ CODE.
 
-*
 * HERE WHEN THE DATA THAT WAS TYPED IN OR IN "DATA" STATEMENTS
 * IS IMPROPERLY FORMATTED. FOR "INPUT" WE START AGAIN.
 * FOR "READ" WE GIVE A SYNTAX ERROR AT THE DATA LINE.
-*
          DO    swAPPLE2=0
 TRMNOK   LDA   INPFLG
          BEQ   TRMNO1     ; IF INPUT TRY AGAIN.
@@ -4067,17 +4054,16 @@ INPCON   LDA   #0
          FIN
 
 INPCO1   STA   INPFLG     ; STORE THE FLAG.
-                          ;
-                          ; IN THE PROCESSING OF DATA AND READ STATEMENTS:
-                          ; ONE POINTER POINTS TO THE DATA (IE, THE NUMBERS BEING FETCHED)
-                          ; AND ANOTHER POINTS TO THE LIST OF VARIABLES.
-                          ;
-                          ; THE POINTER INTO THE DATA ALWAYS STARTS POINTING TO A
-                          ; TERMINATOR -- A , : OR END-OF-LINE.
-                          ;
-                          ; AT THIS POINT TXTPTR POINTS TO LIST OF VARIABLES AND
-                          ; [Y,X] POINTS TO DATA OR INPUT LINE.
-                          ;
+
+* IN THE PROCESSING OF DATA AND READ STATEMENTS:
+* ONE POINTER POINTS TO THE DATA (IE, THE NUMBERS BEING FETCHED)
+* AND ANOTHER POINTS TO THE LIST OF VARIABLES.
+* THE POINTER INTO THE DATA ALWAYS STARTS POINTING TO A
+* TERMINATOR -- A , : OR END-OF-LINE.
+
+* AT THIS POINT TXTPTR POINTS TO LIST OF VARIABLES AND
+* [Y,X] POINTS TO DATA OR INPUT LINE.
+
          STXY  INPPTR
 INLOOP   JSR   PTRGET     ; READ VARIABLE LIST.
          STWD  FORPNT     ; SAVE POINTER FOR "LET" STRING STUFFING.
@@ -4197,15 +4183,14 @@ INPFIN   LDA   INPFLG
          BNE   DATIN
          JMP   INPERR
          FIN
-                          ;
-                          ; SUBROUTINE TO FIND DATA
-                          ; THE SEARCH IS MADE BY USING THE EXECUTION CODE FOR DATA TO
-                          ; SKIP OVER STATEMENTS. THE START WORD OF EACH STATEMENT
-                          ; IS COMPARED WITH "DATATK". EACH NEW LINE NUMBER
-                          ; IS STORED IN "DATLIN" SO THAT IF AN ERROR OCCURS
-                          ; WHILE READING DATA THE ERROR MESSAGE CAN GIVE THE LINE
-                          ; NUMBER OF THE ILL-FORMATTED DATA.
-                          ;
+
+* SUBROUTINE TO FIND DATA
+* THE SEARCH IS MADE BY USING THE EXECUTION CODE FOR DATA TO
+* SKIP OVER STATEMENTS. THE START WORD OF EACH STATEMENT
+* IS COMPARED WITH "DATATK". EACH NEW LINE NUMBER
+* IS STORED IN "DATLIN" SO THAT IF AN ERROR OCCURS
+* WHILE READING DATA THE ERROR MESSAGE CAN GIVE THE LINE
+* NUMBER OF THE ILL-FORMATTED DATA.
 DATLOP   JSR   DATAN      ; SKIP SOME TEXT.
          INY
          TAX              ; END OF LINE?
@@ -4262,7 +4247,6 @@ TRYAGN   ASC   '?REDO FROM START'
 * PAGE
 * SUBTTL     THE NEXT CODE IS THE "NEXT CODE"
 
-*
 * A "FOR" ENTRY ON THE STACK HAS THE FOLLOWING FORMAT:
 *
 * LOW ADDRESS
@@ -4276,7 +4260,6 @@ TRYAGN   ASC   '?REDO FROM START'
 * HIGH ADDRESS
 *
 * TOTAL 16+2*ADDPRC BYTES.
-*
 NEXT     BNE   GETFOR
          LDY   #0         ; WITHOUT ARG CALL "FNDFOR" WITH
          BEQA  STXFOR     ; [FORPNT]=0.
@@ -4342,11 +4325,12 @@ LOOPDN   TXA
                           ; PNTR. [VARPNT] IS THE STK PNTR WHICH
                           ; NEVER MATCHES ANY POINTER.
                           ; JSR TO PUT ON DUMMY NEWSTT ADDR.
-                          ; SUBTTL      FORMULA EVALUATION CODE
-                          ;
-                          ; THESE ROUTINES CHECK FOR CERTAIN "VALTYP".
-                          ; [C] IS NOT PRESERVED.
-                          ;
+
+* SUBTTL      FORMULA EVALUATION CODE
+*
+* THESE ROUTINES CHECK FOR CERTAIN "VALTYP".
+* [C] IS NOT PRESERVED.
+
 FRMNUM   JSR   FRMEVL
 CHKNUM   CLC
          SKIP1
@@ -4358,21 +4342,20 @@ CHKOK    RTS
 DOCSTR   BCS   CHKOK
 CHKERR   LDX   #ERRTM
 ERRGO4   JMP   ERROR
-                          ;
-                          ; THE FORMULA EVALUATOR STARTS WITH
-                          ; [TXTPTR] POINTING TO THE FIRST CHARACTER OF THE FORMULA.
-                          ; AT THE END [TXTPTR] POINTS TO THE TERMINATOR.
-                          ; THE RESULT IS LEFT IN THE FAC.
-                          ; ON RETURN [A] DOES NOT REFLECT THE TERMINATOR.
-                          ;
-                          ; THE FORMULA EVALUATOR USES THE OPERATOR LIST (OPTAB)
-                          ; TO DETERMINE PRECEDENCE AND DISPATCH ADDRESSES FOR
-                          ; EACH OPERATOR.
-                          ; A TEMPORARY RESULT ON THE STACK HAS THE FOLLOWING FORMAT.
-                          ;       THE ADDRESS OF THE OPERATOR ROUTINE.
-                          ;       THE FLOATING POINT TEMPORARY RESULT.
-                          ;       THE PRECEDENCE OF THE OPERATOR.
-                          ;
+
+* THE FORMULA EVALUATOR STARTS WITH
+* [TXTPTR] POINTING TO THE FIRST CHARACTER OF THE FORMULA.
+* AT THE END [TXTPTR] POINTS TO THE TERMINATOR.
+* THE RESULT IS LEFT IN THE FAC.
+* ON RETURN [A] DOES NOT REFLECT THE TERMINATOR.
+*
+* THE FORMULA EVALUATOR USES THE OPERATOR LIST (OPTAB)
+* TO DETERMINE PRECEDENCE AND DISPATCH ADDRESSES FOR
+* EACH OPERATOR.
+* A TEMPORARY RESULT ON THE STACK HAS THE FOLLOWING FORMAT.
+*       THE ADDRESS OF THE OPERATOR ROUTINE.
+*       THE FLOATING POINT TEMPORARY RESULT.
+*       THE PRECEDENCE OF THE OPERATOR.
 FRMEVL   LDX   TXTPTR
          BNE   FRMEV1
          DEC   TXTPTR+1
@@ -4565,14 +4548,16 @@ CHKCLS   LDA   #41        ; CHECK FOR A RIGHT PARENTHESE
 CHKOPN   LDA   #40
          SKIP2
 CHKCOM   LDA   #44
-                          ;
-                          ; "SYNCHK" LOOKS AT THE CURRENT CHARACTER TO MAKE SURE IT
-                          ; IS THE SPECIFIC THING LOADED INTO ACCA JUST BEFORE THE CALL TO
-                          ; "SYNCHK". IF NOT, IT CALLS THE "SYNTAX ERROR" ROUTINE.
-                          ; OTHERWISE IT GOBBLES THE NEXT CHAR AND RETURNS,
-                          ;
-                          ; [A]=NEW CHAR AND TXTPTR IS ADVANCED BY "CHRGET".
-                          ;
+
+* "SYNCHK" LOOKS AT THE CURRENT CHARACTER TO MAKE SURE IT
+* IS THE SPECIFIC THING LOADED INTO ACCA JUST BEFORE THE CALL TO
+* "SYNCHK". IF NOT, IT CALLS THE "SYNTAX ERROR" ROUTINE.
+* OTHERWISE IT GOBBLES THE NEXT CHAR AND RETURNS,
+*
+* [A]=NEW CHAR AND TXTPTR IS ADVANCED BY "CHRGET".
+*
+* DFG - This docstring refers to the macro SYNCHK which simply
+* loads A with its argument and then calls SYNCHR.
 SYNCHR   LDY   #0
          CMP   (TXTPTR),Y ; CHARACTERS EQUAL?
          BNE   SNERR
@@ -4694,23 +4679,23 @@ ISFUN
          JSR   CHRGET     ; SET UP FOR SYNCHK.
          CPX   #2*LASNUM-256+1 ; IS IT PAST "LASNUM"?
          BCC   OKNORM     ; NO, MUST BE NORMAL FUNCTION.
-                          ;
-                          ; MOST FUNCTIONS TAKE A SINGLE ARGUMENT.
-                          ; THE RETURN ADDRESS OF THESE FUNCTIONS IS "CHKNUM"
-                          ; WHICH ASCERTAINS THAT [VALTYP]=0  (NUMERIC).
-                          ; NORMAL FUNCTIONS THAT RETURN STRING RESULTS
-                          ; (E.G., CHR$) MUST POP OFF THAT RETURN ADDR AND
-                          ; RETURN DIRECTLY TO "FRMEVL".
-                          ;
-                          ; THE SO-CALLED "FUNNY" FUNCTIONS CAN TAKE MORE THAN ONE ARGUMENT,
-                          ; THE FIRST OF WHICH MUST BE STRING AND THE SECOND OF WHICH
-                          ; MUST BE A NUMBER BETWEEN 0 AND 255.
-                          ; THE CLOSED PARENTHESIS MUST BE CHECKED AND RETURN IS DIRECTLY
-                          ; TO "FRMEVL" WITH THE TEXT PNTR POINTING BEYOND THE ")".
-                          ; THE POINTER TO THE DESCRIPTOR OF THE STRING ARGUMENT
-                          ; IS STORED ON THE STACK UNDERNEATH THE VALUE OF THE
-                          ; INTEGER ARGUMENT.
-                          ;
+
+* MOST FUNCTIONS TAKE A SINGLE ARGUMENT.
+* THE RETURN ADDRESS OF THESE FUNCTIONS IS "CHKNUM"
+* WHICH ASCERTAINS THAT [VALTYP]=0  (NUMERIC).
+* NORMAL FUNCTIONS THAT RETURN STRING RESULTS
+* (E.G., CHR$) MUST POP OFF THAT RETURN ADDR AND
+* RETURN DIRECTLY TO "FRMEVL".
+*
+* THE SO-CALLED "FUNNY" FUNCTIONS CAN TAKE MORE THAN ONE ARGUMENT,
+* THE FIRST OF WHICH MUST BE STRING AND THE SECOND OF WHICH
+* MUST BE A NUMBER BETWEEN 0 AND 255.
+* THE CLOSED PARENTHESIS MUST BE CHECKED AND RETURN IS DIRECTLY
+* TO "FRMEVL" WITH THE TEXT PNTR POINTING BEYOND THE ")".
+* THE POINTER TO THE DESCRIPTOR OF THE STRING ARGUMENT
+* IS STORED ON THE STACK UNDERNEATH THE VALUE OF THE
+* INTEGER ARGUMENT.
+
          JSR   CHKOPN     ; CHECK FOR AN OPEN PARENTHESE
          JSR   FRMEVL     ; EAT OPEN PAREN AND FIRST ARG.
          JSR   CHKCOM     ; TWO ARGS SO COMMA MUST DELIMIT.
@@ -4775,11 +4760,10 @@ FALSE    LDY   #$00       ; Set to FALSE [(Y)=(0)]
 TRUE     LDY   #$01
          JMP   SNGFLT
          FIN
-                          ;
-                          ; TIME TO PERFORM A RELATIONAL OPERATOR.
-                          ; [DOMASK] CONTAINS THE BITS AS TO WHICH RELATIONAL
-                          ; OPERATOR IT WAS. CARRY BIT ON=STRING COMPARE.
-                          ;
+
+* TIME TO PERFORM A RELATIONAL OPERATOR.
+* [DOMASK] CONTAINS THE BITS AS TO WHICH RELATIONAL
+* OPERATOR IT WAS. CARRY BIT ON=STRING COMPARE.
 DOREL    JSR   CHKVAL     ; CHECK FOR MATCH.
          BCS   STRCMP     ; IT IS A STRING.
          LDA   ARGSGN     ; PACK ARG FOR FCOMP.
@@ -4843,7 +4827,6 @@ PDL      JSR   CONINT     ; Convert FAC to Number in (X) & (FAC+4)
 * PAGE
 * SUBTTL     DIMENSION AND VARIABLE SEARCHING.
 
-*
 * THE "DIM" CODE SETS [DIMFLG] AND THEN FALLS INTO THE VARIABLE SEARCH
 * ROUTINE, WHICH LOOKS AT DIMFLG AT THREE DIFFERENT POINTS.
 *       1) IF AN ENTRY IS FOUND, "DIMFLG" BEING ON INDICATES
@@ -4854,7 +4837,6 @@ PDL      JSR   CONINT     ; Convert FAC to Number in (X) & (FAC+4)
 *               IS USED.
 *       3) WHEN THE BUILD ENTRY CODE FINISHES, ONLY IF "DIMFLG" IS OFF
 *               WILL INDEXING BE DONE.
-*
 DIM3     JSR   CHKCOM     ; MUST BE A COMMA
 DIM      TAX              ; SET [ACCX] NONZERO.
                           ; [ACCA] MUST BE NONZERO TO WORK RIGHT.
@@ -4862,13 +4844,12 @@ DIM1     JSR   PTRGT1
 DIMCON   JSR   CHRGOT     ; GET LAST CHARACTER.
          BNE   DIM3
          RTS
-                          ;
-                          ; ROUTINE TO READ THE VARIABLE NAME AT THE CURRENT TEXT POSITION
-                          ; AND  PUT A POINTER TO ITS VALUE IN VARPNT. [TXTPTR]
-                          ; POINTS TO THE TERMINATING CHARCTER.. NOT THAT EVALUATING SUBSCRIPTS
-                          ; IN A VARIABLE NAME CAN CAUSE RECURSIVE CALLS TO "PTRGET" SO AT
-                          ; THAT POINT ALL VALUES MUST BE STORED ON THE STACK.
-                          ;
+
+* ROUTINE TO READ THE VARIABLE NAME AT THE CURRENT TEXT POSITION
+* AND  PUT A POINTER TO ITS VALUE IN VARPNT. [TXTPTR]
+* POINTS TO THE TERMINATING CHARCTER.. NOT THAT EVALUATING SUBSCRIPTS
+* IN A VARIABLE NAME CAN CAUSE RECURSIVE CALLS TO "PTRGET" SO AT
+* THAT POINT ALL VALUES MUST BE STORED ON THE STACK.
 PTRGET   LDX   #0         ; MAKE [ACCX]=0.
          JSR   CHRGOT     ; RETRIEVE LAST CHARACTER.
 PTRGT1   STX   DIMFLG     ; STORE FLAG AWAY.
@@ -4964,10 +4945,9 @@ NOTIT    CLC
          BCC   LOPFND
          INX
          BNEA  STXFND     ; ALWAYS BRANCHES.
-                          ;
-                          ; TEST FOR A LETTER.     / CARRY OFF= NOT A LETTER.
-                          ;                          CARRY ON= A LETTER.
-                          ;
+
+* TEST FOR A LETTER.     / CARRY OFF= NOT A LETTER.
+*                          CARRY ON= A LETTER.
 ISLETC   CMP   #'A'
          BCC   ISLRTS     ; IF LESS THAN "A", RET.
          SBC   #'Z'+1
@@ -5080,12 +5060,11 @@ GETAR2   ASL
 JSRGM    STWD  ARYPNT
          RTS
 N32768   DFB   144,128,0,0 ; -32768.
-                          ;
-                          ; INTIDX READS A FORMULA FROM THE CURRENT POSITION AND
-                          ; TURNS IT INTO A POSITIVE INTEGER
-                          ; LEAVING THE RESULT IN FACMO&LO. NEGATIVE ARGUMENTS
-                          ; ARE NOT ALLOWED.
-                          ;
+
+* INTIDX READS A FORMULA FROM THE CURRENT POSITION AND
+* TURNS IT INTO A POSITIVE INTEGER
+* LEAVING THE RESULT IN FACMO&LO. NEGATIVE ARGUMENTS
+* ARE NOT ALLOWED.
 INTIDX   JSR   CHRGET
          DO    swAPPLE2
          JSR   FRMNUM
@@ -5111,18 +5090,18 @@ ISARY
          LDA   SUBFLG     ; Subscripts allowed ?
          BNE   LOPSTS     ; no --- label LOPSTS added by UB
          FIN
-                          ;
-                          ; FORMAT OF ARRAYS IN CORE.
-                          ;
-                          ; DESCRIPTOR:
-                          ;       LOWBYTE = FIRST CHARACTER.
-                          ;       HIGHBYTE = SECOND CHARACTER (200 BIT IS STRING FLAG).
-                          ;       LENGTH OF ARRAY IN CORE IN BYTES (INCLUDES EVERYTHING).
-                          ;       NUMBER OF DIMENSIONS.
-                          ;       FOR EACH DIMENSION STARTING WITH THE FIRST A LIST
-                          ;           (2 BYTES EACH) OF THE MAX INDICE+1
-                          ;       THE VALUES
-                          ;
+
+* FORMAT OF ARRAYS IN CORE.
+*
+* DESCRIPTOR:
+*       LOWBYTE = FIRST CHARACTER.
+*       HIGHBYTE = SECOND CHARACTER (200 BIT IS STRING FLAG).
+*       LENGTH OF ARRAY IN CORE IN BYTES (INCLUDES EVERYTHING).
+*       NUMBER OF DIMENSIONS.
+*       FOR EACH DIMENSION STARTING WITH THE FIRST A LIST
+*           (2 BYTES EACH) OF THE MAX INDICE+1
+*       THE VALUES
+
          LDA   DIMFLG
          DO    INTPRC
          ORA   INTFLG
@@ -5218,31 +5197,29 @@ NODATERR LDX   #ERROD     ; "?Out Of Data" error
          FIN
 
 
-                          ;
-                          ; HERE WHEN VARIABLE IS NOT FOUND IN THE ARRAY TABLE.
-                          ;
-                          ; BUILDING AN ENTRY.
-                          ;
-                          ;       PUT DOWN THE DESCRIPTOR.
-                          ;       SETUP NUMBER OF DIMENSIONS.
-                          ;       MAKE SURE THERE IS ROOM FOR THE NEW ENTRY.
-                          ;       REMEMBER "VARPNT".
-                          ;       TALLY=4.
-                          ;       SKIP 2 LOCS FOR LATER FILL IN OF SIZE.
-                          ; LOOP: GET AN INDICE
-                          ;       PUT DOWN NUMBER+1 AND INCREMENT VARPTR.
-                          ;       TALLY=TALLY*NUMBER+1.
-                          ;       DECREMENT NUMBER-DIMS.
-                          ;       BNE LOOP
-                          ;       CALL "REASON" WITH [Y,A] REFLECTING LAST LOC OF VARIABLE.
-                          ;       UPDATE STREND.
-                          ;       ZERO ALL.
-                          ;       MAKE TALLY INCLUDE MAXDIMS AND DESCRIPTOR.
-                          ;       PUT DOWN TALLY.
-                          ;       IF CALLED BY DIMENSION, RETURN.
-                          ;       OTHERWISE INDEX INTO THE VARIABLE AS IF IT
-                          ;        WERE FOUND ON THE INITIAL SEARCH.
-                          ;
+* HERE WHEN VARIABLE IS NOT FOUND IN THE ARRAY TABLE.
+*
+* BUILDING AN ENTRY.
+*
+*       PUT DOWN THE DESCRIPTOR.
+*       SETUP NUMBER OF DIMENSIONS.
+*       MAKE SURE THERE IS ROOM FOR THE NEW ENTRY.
+*       REMEMBER "VARPNT".
+*       TALLY=4.
+*       SKIP 2 LOCS FOR LATER FILL IN OF SIZE.
+* LOOP: GET AN INDICE
+*       PUT DOWN NUMBER+1 AND INCREMENT VARPTR.
+*       TALLY=TALLY*NUMBER+1.
+*       DECREMENT NUMBER-DIMS.
+*       BNE LOOP
+*       CALL "REASON" WITH [Y,A] REFLECTING LAST LOC OF VARIABLE.
+*       UPDATE STREND.
+*       ZERO ALL.
+*       MAKE TALLY INCLUDE MAXDIMS AND DESCRIPTOR.
+*       PUT DOWN TALLY.
+*       IF CALLED BY DIMENSION, RETURN.
+*       OTHERWISE INDEX INTO THE VARIABLE AS IF IT
+*        WERE FOUND ON THE INITIAL SEARCH.
 NOTFDD   JSR   FMAPTR     ; FORM ARYPNT.
          JSR   REASON
          LDA   #0
@@ -5338,19 +5315,18 @@ DECCUR   DEC   ARYPNT+1
          LDA   DIMFLG
          BNE   DIMRTS     ; BYE.
          INY
-                          ;
-                          ; AT THIS POINT [LOWTR,Y] POINTS BEYOND THE SIZE TO THE NUMBER OF
-                          ; DIMENSIONS. STRATEGY:
-                          ;         NUMDIM=NUMBER OF DIMENSIONS.
-                          ;         CURTOL=0.
-                          ; INLPNM: GET A NEW INDICE.
-                          ;         MAKE SURE INDICE IS NOT TOO BIG.
-                          ;         MULTIPLY CURTOL BY CURMAX.
-                          ;         ADD INDICE TO CURTOL.
-                          ;         NUMDIM=NUMDIM-1.
-                          ;         BNE INLPNM.
-                          ;         USE [CURTOL]*4 AS OFFSET.
-                          ;
+
+* AT THIS POINT [LOWTR,Y] POINTS BEYOND THE SIZE TO THE NUMBER OF
+* DIMENSIONS. STRATEGY:
+*         NUMDIM=NUMBER OF DIMENSIONS.
+*         CURTOL=0.
+* INLPNM: GET A NEW INDICE.
+*         MAKE SURE INDICE IS NOT TOO BIG.
+*         MULTIPLY CURTOL BY CURMAX.
+*         ADD INDICE TO CURTOL.
+*         NUMDIM=NUMDIM-1.
+*         BNE INLPNM.
+*         USE [CURTOL]*4 AS OFFSET.
 GETDEF   LDA   (LOWTR),Y
          STA   COUNT      ; SAVE A COUNTER.
          LDA   #0         ; ZERO [CURTOL].
@@ -5494,7 +5470,6 @@ SNGFLT   LDA   #0
          BEQA  GIVAYF     ; FLOAT IT.
 * PAGE
 * SUBTTL     SIMPLE-USER-DEFINED-FUNCTION CODE.
-
 *
 * NOTE ONLY SINGLE ARGUMENTS ARE ALLOWED TO FUNCTIONS
 * AND FUNCTIONS MUST BE OF THE SINGLE LINE FORM:
@@ -5509,11 +5484,10 @@ SNGFLT   LDA   #0
 *       A PNTR TO THE ARGUMENT VARIABLE.
 *
 * FUNCTION NAMES CAN BE LIKE "FNA4".
-*
-*
+
+
 * SUBROUTINE TO SEE IF WE ARE IN DIRECT MODE.
 * AND COMPLAIN IF SO.
-*
 ERRDIR   LDX   CURLIN+1   ; DIR MODE HAS [CURLIN]=0,255
          INX              ; SO NOW, IS RESULT ZERO?
          BNE   DIMRTS     ; YES.
@@ -5541,9 +5515,8 @@ DEF      JSR   GETFNM     ; GET A PNTR TO THE FUNCTION.
          PSHWD TXTPTR
          JSR   DATA
          JMP   DEFFIN
-                          ;
-                          ; SUBROUTINE TO GET A PNTR TO A FUNCTION NAME.
-                          ;
+
+* SUBROUTINE TO GET A PNTR TO A FUNCTION NAME.
 GETFNM   SYNCHK FNTK       ; MUST START WITH FN.
          ORA   #128       ; PUT FUNCTION BIT ON.
          STA   SUBFLG
@@ -5622,11 +5595,9 @@ DEFRTS   RTS
 
 * SUBTTL     STRING FUNCTIONS.
 
-*
 * THE STR$ FUNCTION TAKES A NUMBER AND GIVES A STRING
 * WITH THE CHARACTERS THE OUTPUT OF THE NUMBER
 * WOULD HAVE GIVEN.
-*
 STR      JSR   CHKNUM     ; ARG HAS TO BE NUMERIC.
          LDY   #0
          JSR   FOUTC      ; DO ITS OUTPUT.
@@ -5634,28 +5605,28 @@ STR      JSR   CHKNUM     ; ARG HAS TO BE NUMERIC.
          PLA
 TIMSTR   LDWDI LOFBUF
          BEQA  STRLIT     ; SCAN IT AND TURN IT INTO A STRING.
-                          ;
-                          ; "STRINI" GET STRING SPACE FOR THE CREATION OF A STRING AND
-                          ; CREATES A DESCRIPTOR FOR IT IN "DSCTMP".
-                          ;
+
+* "STRINI" GET STRING SPACE FOR THE CREATION OF A STRING AND
+* CREATES A DESCRIPTOR FOR IT IN "DSCTMP".
 STRINI   LDXY  FACMO      ; GET FACMO TO STORE IN DSCPNT.
          STXY  DSCPNT     ; RETAIN THE DESCRIPTOR POINTER.
 STRSPA   JSR   GETSPA     ; GET STRING SPACE.
          STXY  DSCTMP+1   ; SAVE LOCATION.
          STA   DSCTMP     ; SAVE LENGTH.
          RTS              ; ALL DONE.
-                          ;
-                          ; "STRLT2" TAKES THE STRING LITERAL WHOSE FIRST CHARACTER
-                          ; IS POINTED TO BY [Y,A] AND BUILDS A DESCRIPTOR FOR IT.
-                          ; THE DESCRIPTOR IS INITIALLY BUILT IN "DSCTMP", BUT "PUTNEW"
-                          ; TRANSFERS IT INTO A TEMPORARY AND LEAVES A POINTER
-                          ; AT THE TEMPORARY IN FACMO&LO. THE CHARACTERS OTHER THAN
-                          ; ZERO THAT TERMINATE THE STRING SHOULD BE SET UP IN "CHARAC"
-                          ; AND "ENDCHR". IF THE TERMINATOR IS A QUOTE, THE QUOTE IS SKIPPED
-                          ; OVER. LEADING QUOTES SHOULD BE SKIPPED BEFORE JSR. ON RETURN
-                          ; THE CHARACTER AFTER THE STRING LITERAL IS POINTED TO
-                          ; BY [STRNG2].
-                          ;
+
+* DFG - STRLIT sets up terminator, then falls into:
+*
+* "STRLT2" TAKES THE STRING LITERAL WHOSE FIRST CHARACTER
+* IS POINTED TO BY [Y,A] AND BUILDS A DESCRIPTOR FOR IT.
+* THE DESCRIPTOR IS INITIALLY BUILT IN "DSCTMP", BUT "PUTNEW"
+* TRANSFERS IT INTO A TEMPORARY AND LEAVES A POINTER
+* AT THE TEMPORARY IN FACMO&LO. THE CHARACTERS OTHER THAN
+* ZERO THAT TERMINATE THE STRING SHOULD BE SET UP IN "CHARAC"
+* AND "ENDCHR". IF THE TERMINATOR IS A QUOTE, THE QUOTE IS SKIPPED
+* OVER. LEADING QUOTES SHOULD BE SKIPPED BEFORE JSR. ON RETURN
+* THE CHARACTER AFTER THE STRING LITERAL IS POINTED TO
+* BY [STRNG2].
 STRLIT   LDX   #34        ; ASSUME STRING ENDS ON QUOTE.
          STX   CHARAC
          STX   ENDCHR
@@ -5692,12 +5663,11 @@ STRCP    TYA
          JSR   STRINI
          LDXY  STRNG1
          JSR   MOVSTR     ; MOVE STRING.
-                          ;
-                          ; SOME STRING FUNCTION IS RETURNING A RESULT IN DSCTMP.
-                          ; SETUP A TEMP DESCRIPTOR WITH DSCTMP IN IT.
-                          ; PUT A POINTER TO THE DESCRIPTOR IN FACMO&LO AND FLAG THE
-                          ; RESULT AS TYPE STRING.
-                          ;
+
+* SOME STRING FUNCTION IS RETURNING A RESULT IN DSCTMP.
+* SETUP A TEMP DESCRIPTOR WITH DSCTMP IN IT.
+* PUT A POINTER TO THE DESCRIPTOR IN FACMO&LO AND FLAG THE
+* RESULT AS TYPE STRING.
 PUTNEW   LDX   TEMPPT     ; POINTER TO FIRST FREE TEMP.
          CPX   #TEMPST+{STRSIZ*NUMTMP}
          BNE   PUTNW1
@@ -5722,15 +5692,14 @@ PUTNW1   LDA   DSCTMP
          INX              ; POINT FURTHER.
          STX   TEMPPT     ; SAVE POINTER TO NEXT TEMP IF ANY.
          RTS              ; ALL DONE.
-                          ;
-                          ; GETSPA - GET SPACE FOR CHARACTER STRING.
-                          ; MAY FORCE GARBAGE COLLECTION.
-                          ;
-                          ; # OF CHARACTERS (BYTES) IN ACCA.
-                          ; RETURNS WITH POINTER IN [Y,X]. OTHERWISE (IF CAN'T GET
-                          ; SPACE) BLOWS OFF TO "OUT OF STRING SPACE" TYPE ERROR.
-                          ; ALSO PRESERVES [ACCA] AND SETS [FRESPC]=[Y,X]=PNTR AT SPACE.
-                          ;
+
+* GETSPA - GET SPACE FOR CHARACTER STRING.
+* MAY FORCE GARBAGE COLLECTION.
+*
+* \# OF CHARACTERS (BYTES) IN ACCA.
+* RETURNS WITH POINTER IN [Y,X]. OTHERWISE (IF CAN'T GET
+* SPACE) BLOWS OFF TO "OUT OF STRING SPACE" TYPE ERROR.
+* ALSO PRESERVES [ACCA] AND SETS [FRESPC]=[Y,X]=PNTR AT SPACE.
 GETSPA   LSR   GARBFL     ; SIGNAL NO GARBAGE COLLECTION YET.
 TRYAG2   PHA              ; SAVE FOR LATER.
          EOR   #255
@@ -5908,19 +5877,20 @@ GRBRTS   LDX   INDEX1+1
          LDY   #0
          RTS              ; DONE.
          DO    swAPPLE2+swOSI+swKIM+swPET=0 ; the original source way to check GC done
-                          ;
-                          ; HERE WHEN MADE ONE COMPLETE PASS THROUGH STRING VARIABLES.
-                          ;
+* HERE WHEN MADE ONE COMPLETE PASS THROUGH STRING VARIABLES.
 GRBPAS   LDA   GRBPNT+1   ; VARIABLE POINTER.
          ORA   GRBPNT
          FIN
          DO    swAPPLE2.{swOSI*{swOSIFIX=0}} ; Applesoft and unfixed OSI checks DEFPNT+1
+* HERE WHEN MADE ONE COMPLETE PASS THROUGH STRING VARIABLES.
 GRBPAS   LDX   DEFPNT+1
          FIN
          DO    swKIM+swPET    ; KIM+PET do the same ... a bug or not ?
+* HERE WHEN MADE ONE COMPLETE PASS THROUGH STRING VARIABLES.
 GRBPAS   LDX   DEFPNT+1
          FIN
          DO    swOSIFIX     ; Uncle Bernie's OSI fix checks GRBTOP+1
+* HERE WHEN MADE ONE COMPLETE PASS THROUGH STRING VARIABLES.
 GRBPAS   LDX   GRBTOP+1
          FIN
          BEQ   GRBRTS     ; ALL DONE.
@@ -5970,11 +5940,10 @@ NSIM     STY   SIZE
          NOP
          NOP
          FIN
-                          ;
-                          ; THE FOLLOWING ROUTINE CONCATENATES TWO STRINGS.
-                          ; THE FAC CONTAINS THE FIRST ONE AT THIS POINT.
-                          ; [TXTPTR] POINTS TO THE + SIGN.
-                          ;
+
+* THE FOLLOWING ROUTINE CONCATENATES TWO STRINGS.
+* THE FAC CONTAINS THE FIRST ONE AT THIS POINT.
+* [TXTPTR] POINTS TO THE + SIGN.
 CAT      LDA   FACLO      ; PSH HIGH ORDER ONTO STACK.
          PHA
          LDA   FACMO      ; AND THE LOW.
@@ -6028,18 +5997,19 @@ MVDONE   CLC
          BCC   MVSTRT
          INC   FRESPC+1
 MVSTRT   RTS
-                          ;
-                          ; "FRETMP" IS PASSED A STRING DESCRIPTOR PNTR IN [Y,A].
-                          ; A CHECK IS MADE TO SEE IF THE STRING DESCRIPTOR POINTS TO THE LAST
-                          ; TEMPORARY DESCRIPTOR ALLOCATED BY PUTNEW.
-                          ; IF SO, THE TEMPORARY IS FREED UP BY THE UPDATING OF [TEMPPT].
-                          ; IF A TEMP IS FREED UP, A FURTHER CHECK SEES IF THE STRING DATA THAT
-                          ; THAT STRING TEMP PNT'D TO IS THE LOWEST PART OF STRING SPACE IN USE.
-                          ; IF SO, [FRETOP] IS UPDATED TO REFLECT THE FACT THE FACT THAT THE SPACE
-                          ; IS NO LONGER IN USE.
-                          ; THE ADDR OF THE ACTUAL STRING IS RETURNED IN [Y,X] AND
-                          ; ITS LENGTH IN ACCA.
-                          ;
+
+* DFG - Verify FAC is a string, copy FACMO to INDEX, and fall into:
+*
+* "FRETMP" IS PASSED A STRING DESCRIPTOR PNTR IN [Y,A].
+* A CHECK IS MADE TO SEE IF THE STRING DESCRIPTOR POINTS TO THE LAST
+* TEMPORARY DESCRIPTOR ALLOCATED BY PUTNEW.
+* IF SO, THE TEMPORARY IS FREED UP BY THE UPDATING OF [TEMPPT].
+* IF A TEMP IS FREED UP, A FURTHER CHECK SEES IF THE STRING DATA THAT
+* THAT STRING TEMP PNT'D TO IS THE LOWEST PART OF STRING SPACE IN USE.
+* IF SO, [FRETOP] IS UPDATED TO REFLECT THE FACT THE FACT THAT THE SPACE
+* IS NO LONGER IN USE.
+* THE ADDR OF THE ACTUAL STRING IS RETURNED IN [Y,X] AND
+* ITS LENGTH IN ACCA.
 FRESTR   JSR   CHKSTR     ; MAKE SURE ITS A STRING.
 FREFAC   LDWD  FACMO      ; FREE UP STR PNT'D TO BY FAC.
 FRETMP   STWD  INDEX      ; GET LENGTH FOR LATER.
@@ -6079,11 +6049,10 @@ FRETMS   CPY   LASTPT+1   ; LAST ENTRY TO TEMP?
          STA   LASTPT     ; UPDATE TEMP PNTR.
          LDY   #0         ; ALSO CLEARS ZFLG SO WE DO REST OF FRETMP.
 FRERTS   RTS              ; ALL DONE.
-                          ;
-                          ; CHR$(#) CREATES A STRING WHICH CONTAINS AS ITS ONLY
-                          ; CHARACTER THE ASCII EQUIVALENT OF THE INTEGER ARGUMENT (#)
-                          ; WHICH MUST BE .LT. 255.
-                          ;
+
+* CHR$(#) CREATES A STRING WHICH CONTAINS AS ITS ONLY
+* CHARACTER THE ASCII EQUIVALENT OF THE INTEGER ARGUMENT (#)
+* WHICH MUST BE .LT. 255.
 CHR      JSR   CONINT     ; GET INTEGER IN RANGE.
          TXA
          PHA
@@ -6095,11 +6064,10 @@ CHR      JSR   CONINT     ; GET INTEGER IN RANGE.
          PLA              ; GET RID OF "CHKNUM" RETURN ADDR.
          PLA
 RLZRET   JMP   PUTNEW     ; SETUP FAC TO POINT TO DESC.
-                          ;
-                          ; THE FOLLOWING IS THE LEFT$($,#) FUNCTION.
-                          ; IT TAKES THE LEFTMOST # CHARACTERS OF THE STRING.
-                          ; IF # .GT. THE LEN OF THE STRING, IT RETURNS THE WHOLE STRING.
-                          ;
+
+* THE FOLLOWING IS THE LEFT$($,#) FUNCTION.
+* IT TAKES THE LEFTMOST # CHARACTERS OF THE STRING.
+* IF # .GT. THE LEN OF THE STRING, IT RETURNS THE WHOLE STRING.
 LEFT     JSR   PREAM      ; TEST PARAMETERS.
          CMP   (DSCPNT),Y
          TYA
@@ -6129,13 +6097,12 @@ RIGHT    JSR   PREAM
          SBC   (DSCPNT),Y
          EOR   #255       ; NEGATE.
          JMP   RLEFT
-                          ;
-                          ; MID ($,#) RETURNS STRING WITH CHARS FROM # POSITION
-                          ; ONWARD. IF # .GT. LEN ($) THEN RETURN NULL STRING.
-                          ; MID ($,#,#) RETURNS STRING WITH CHARACTERS FROM
-                          ; # POSITION FOR #2 CHARACTERS. IF #2 GOES PAST END OF STRING
-                          ; RETURN AS MUCH AS POSSIBLE.
-                          ;
+
+* MID ($,#) RETURNS STRING WITH CHARS FROM # POSITION
+* ONWARD. IF # .GT. LEN ($) THEN RETURN NULL STRING.
+* MID ($,#,#) RETURNS STRING WITH CHARACTERS FROM
+* # POSITION FOR #2 CHARACTERS. IF #2 GOES PAST END OF STRING
+* RETURN AS MUCH AS POSSIBLE.
 MID      LDA   #255       ; DEFAULT.
          STA   FACLO      ; SAVE FOR LATER COMPARE.
          JSR   CHRGOT     ; GET CURRENT CHARACTER.
@@ -6160,9 +6127,7 @@ MID2     JSR   PREAM      ; CHECK IT OUT.
          LDA   FACLO      ; GET LENGTH OF WHAT'S DESIRED.
          BCS   RLEFT3     ; COPY IT.
 
-                          ;
-                          ; USED BY RIGHT$, LEFT$, MID$ FOR PARAMETER CHECKING AND SETUP.
-                          ;
+* USED BY RIGHT$, LEFT$, MID$ FOR PARAMETER CHECKING AND SETUP.
 PREAM    JSR   CHKCLS     ; PARAM LIST SHOULD END.
          PLA              ; GET THE RETURN ADDRESS INTO
          DO    swOSI+swPET=0
@@ -6196,10 +6161,9 @@ PREAM    JSR   CHKCLS     ; PARAM LIST SHOULD END.
          ELSE
          RTS
          FIN
-                          ;
-                          ; THE FUNCTION LEN($) RETURNS THE LENGTH OF THE STRING
-                          ; PASSED AS AN ARGUMENT.
-                          ;
+
+* THE FUNCTION LEN($) RETURNS THE LENGTH OF THE STRING
+* PASSED AS AN ARGUMENT.
 LEN      JSR   LEN1
 LEN0     JMP   SNGFLT
 LEN1     JSR   FRESTR     ; FREE UP STRING.
@@ -6207,10 +6171,9 @@ LEN1     JSR   FRESTR     ; FREE UP STRING.
          STX   VALTYP     ; FORCE NUMERIC.
          TAY              ; SET CODES ON LENGTH.
          RTS              ; DONE.
-                          ;
-                          ; THE FOLLOWING IS THE ASC($) FUNCTION. IT RETURNS
-                          ; AN INTEGER WHICH IS THE DECIMAL ASCII EQUIVALENT.
-                          ;
+
+* THE FOLLOWING IS THE ASC($) FUNCTION. IT RETURNS
+* AN INTEGER WHICH IS THE DECIMAL ASCII EQUIVALENT.
 ASC      JSR   LEN1
          BEQ   GOFUC      ; NULL STRING, BAD ARG.
          LDY   #0
@@ -6229,13 +6192,12 @@ CONINT   JSR   POSINT     ; CONVERT THE FAC TO A SINGLE BYTE INT.
          BNE   GOFUC      ; RESULT MUST BE .LE. 255.
          LDX   FACLO
 CHRGO2   JMP   CHRGOT     ; SET CONDITION CODES ON TERMINATOR.
-                          ;
-                          ; THE "VAL" FUNCTION TAKES A STRING AND TURNS IT INTO
-                          ; A NUMBER BY INTERPRETING THE ASCII DIGITS ETCQ
-                          ; EXCEPT FOR THE PROBLEM THAT A TERMINATOR MUST BE SUPPLIED
-                          ; BY REPLACING THE CHARACTER BEYOND THE STRING, VAL IS MERELY
-                          ; A CALL TO FLOATING POINT INPUT ("FIN").
-                          ;
+
+* THE "VAL" FUNCTION TAKES A STRING AND TURNS IT INTO
+* A NUMBER BY INTERPRETING THE ASCII DIGITS ETCQ
+* EXCEPT FOR THE PROBLEM THAT A TERMINATOR MUST BE SUPPLIED
+* BY REPLACING THE CHARACTER BEYOND THE STRING, VAL IS MERELY
+* A CALL TO FLOATING POINT INPUT ("FIN").
 VAL      JSR   LEN1       ; DO SETUP. SET RESULT=NUMERIC.
          JEQ   ZEROFC     ; ZERO THE FAC ON A NULL STRING
          LDXY  TXTPTR
@@ -6322,11 +6284,10 @@ POKE     JSR   GETNUM
          STA   (POKER),Y  ; STORE VALUE AWAY.
          RTS              ; SCANNED  EVERYTHING.
 
-                          ; THE WAIT LOCATION,MASK1,MASK2 STATEMENT WAITS UNTIL THE CONTENTS
-                          ; OF LOCATION IS NONZERO WHEN XORED WITH MASK2
-                          ; AND THEN ANDED WITH MASK1. IF MASK2 IS NOT PRESENT, IT
-                          ; IS ASSUMED TO BE ZERO.
-
+* THE WAIT LOCATION,MASK1,MASK2 STATEMENT WAITS UNTIL THE CONTENTS
+* OF LOCATION IS NONZERO WHEN XORED WITH MASK2
+* AND THEN ANDED WITH MASK1. IF MASK2 IS NOT PRESENT, IT
+* IS ASSUMED TO BE ZERO.
 FNWAIT   JSR   GETNUM
          STX   ANDMSK
          LDX   #0
@@ -6595,10 +6556,9 @@ INCFAC   INC   FACLO
 INCFRT   RTS
 OVERR    LDX   #ERROV
          JMP   ERROR      ; TELL USER.
-                          ;
-                          ; "SHIFTR" SHIFTS [X+1:X+3] [-ACCA]  BITS RIGHT.
-                          ; SHIFTS BYTES TO START WITH IF POSSIBLE.
-                          ;
+
+* "SHIFTR" SHIFTS [X+1:X+3] [-ACCA]  BITS RIGHT.
+* SHIFTS BYTES TO START WITH IF POSSIBLE.
 MULSHF   LDX   #RESHO-1   ; ENTRY POINT FOR MULTIPLIER.
 SHFTR2   LDY   3+ADDPRC,X ; SHIFT BYTES FIRST.
          STY   FACOV
@@ -6684,10 +6644,8 @@ SHFTRT   CLC              ; CLEAR OUTPUT OF FACOV.
 * PAGE
 * SUBTTL     NATURAL LOG FUNCTION.
 
-*
-* CALCULATION IS BY:
-* LN(F*2^N)=(N+LOG2(F))*LN(2)
-* AN APPROXIMATION POLYNOMIAL IS USED TO CALCULATE LOG2(F).
+* DFG - moved LOG docstring down to LOG
+
 *  CONSTANTS USED BY LOG:
 FONE     DFB   $81,0,0,0  ; 1.0
          DO    ADDPRC
@@ -6732,6 +6690,9 @@ LOG2                      ;  LN(2)
          DFB   $17,$F8
          FIN
 
+* CALCULATION IS BY:
+* LN(F*2^N)=(N+LOG2(F))*LN(2)
+* AN APPROXIMATION POLYNOMIAL IS USED TO CALCULATE LOG2(F).
 LOG      JSR   SIGN       ; IS IT POSITIVE?
          BEQ   LOGERR
          BPL   LOG1
@@ -6743,7 +6704,7 @@ LOG1     LDA   FACEXP     ; GET EXPONENT INTO ACCA.
          STA   FACEXP     ; RESULT IS FAC IN RANGE [0.5,1].
          LDWDI SQRHLF     ; GET POINTER TO SQR(0.5).
 
-                          ; CALCULATE (F-SQR(.5))/(F+SQR(.5))
+* CALCULATE (F-SQR(.5))/(F+SQR(.5))
 
          JSR   FADD       ; ADD TO FAC.
          LDWDI SQRTWO     ; GET SQR(2.).
@@ -6757,7 +6718,7 @@ LOG1     LDA   FACEXP     ; GET EXPONENT INTO ACCA.
          PLA              ; GET EXPONENT BACK.
          JSR   FINLOG     ; ADD IT IN.
 MULLN2   LDWDI LOG2       ; MULTIPLY RESULT BY LOG(2.0).
-                          ;JMP FMULT       ; MULTIPLY TOGETHER. (fall through)
+*        JMP FMULT        ; MULTIPLY TOGETHER. (fall through)
 
 * PAGE
 * SUBTTL     FLOATING MULTIPLICATION AND DIVISION.
@@ -6823,7 +6784,7 @@ MLTPL3   RAR   RESHO
          BNE   MLTPL2     ; SLOW AS A TURTLE !
 MULTRT   RTS
 
-                          ; ROUTINE TO UNPACK MEMORY INTO ARG.
+* ROUTINE TO UNPACK MEMORY INTO ARG.
 CONUPK   STWD  INDEX1
          LDY   #3+ADDPRC
          LDA   (INDEX1),Y
@@ -6850,7 +6811,7 @@ CONUPK   STWD  INDEX1
          LDA   FACEXP     ; SET CODES OF FACEXP.
          RTS
 
-                          ; CHECK SPECIAL CASES AND ADD EXPONENTS FOR FMULT, FDIV.
+* CHECK SPECIAL CASES AND ADD EXPONENTS FOR FMULT, FDIV.
 MULDIV   LDA   ARGEXP     ; EXP OF ARG=0?
 MLDEXP   BEQ   ZEREMV     ; SO WE GET ZERO EXPONENT.
          CLC
@@ -6874,7 +6835,7 @@ ZEREMV   PLA              ; GET ADDR OFF STACK.
          JMP   ZEROFC     ; UNDERFLOW.
 GOOVER   JMP   OVERR      ; OVERFLOW.
 
-                          ; MULTIPLY FAC BY 10.
+* MULTIPLY FAC BY 10.
 MUL10    JSR   MOVAF      ; COPY FAC INTO ARG.
          TAX
          BEQ   MUL10R     ; IF [FAC]=0, GOT ANSWER.
@@ -6888,7 +6849,7 @@ FINML6   LDX   #0
          BEQ   GOOVER     ; OVERFLOW.
 MUL10R   RTS
 
-                          ;  DIVIDE FAC BY 10.
+*  DIVIDE FAC BY 10.
 TENZC    DFB   $84,$20,0,0
          DO    ADDPRC
          DFB   0
@@ -7074,10 +7035,11 @@ INCRND   JSR   INCFAC     ; YES, ADD ONE TO LSB(FAC).
          BNE   MOVRTS     ; NO CARRY MEANS DONE.
          JMP   RNDSHF     ; SQUEEZ MSB IN AND RTS.
                           ; NOTE [C]=1 SINCE INCFAC DOESNT TOUCH C.
-                          ; PAGE
-                          ; SUBTTL     SIGN, SGN, FLOAT, NEG, ABS.
 
-                          ; PUT SIGN OF FAC IN ACCA.
+* PAGE
+* SUBTTL     SIGN, SGN, FLOAT, NEG, ABS.
+
+* PUT SIGN OF FAC IN ACCA.
 SIGN     LDA   FACEXP
          BEQ   SIGNRT     ; IF NUMBER IS ZERO, SO IS RESULT.
 FCSIGN   LDA   FACSGN
@@ -7119,6 +7081,8 @@ ABS      LSR   FACSGN
 * A=1  IF ARG .LT. FAC.
 * A=0  IF ARG == FAC.
 * A=-1 IF ARG .GT. FAC.
+* DFG - above is misleading if taken as the docstring for FCOMP
+
 FCOMP    STA   INDEX2
 FCOMPN   STY   INDEX2+1
          LDY   #0
@@ -7230,7 +7194,7 @@ INTRTS   RTS
 FIN      LDY   #0         ; ZERO FACSGN&SGNFLG.
          LDX   #9+ADDPRC  ; ZERO EXP AND HO (AND MOH).
 FINZLP   DFB   $94,DECCNT ; DFG - This is STY DECCNT,X which Merlin 32 chokes on for some reason
-                          ; ZERO MO AND LO. DFGX
+                          ; ZERO MO AND LO.
          DEX              ; ZERO TENEXP AND EXPSGN
          BPL   FINZLP     ; ZERO DECCNT, DPTFLG.
          BCC   FINDGQ     ; FLAGS STILL SET FROM CHRGET.
@@ -7540,7 +7504,7 @@ ZERO
          DO    ADDPRC
          DFB   0
          FIN
-                          ; POWER OF TEN TABLE
+* POWER OF TEN TABLE
          DO    ADDPRC=0
 FOUTBL
          DFB   $FE,$79,$60 ; -100000
@@ -7582,17 +7546,17 @@ SQR      JSR   MOVAF      ; MOVE FAC INTO ARG.
          LDWDI FHALF
          JSR   MOVFM      ; PUT MEMORY INTO FAC.
                           ; LAST THING FETCHED IS FACEXP. INTO ACCX.
-                          ; JMP FPWRT      ;FALL INTO FPWRT.
+*        JMP FPWRT        ;FALL INTO FPWRT.
 
-                          ; EXPONENTIATION ---  X^Y.
-                          ; N.B.  0^0=1
-                          ; FIRST CHECK IF Y=0. IF SO, THE RESULT IS 1.
-                          ; NEXT CHECK IF X=0. IF SO THE RESULT IS 0.
-                          ; THEN CHECK IF X.GT.0. IF NOT CHECK THAT Y IS AN INTEGER.
-                          ; IF SO, NEGATE X, SO THAT LOG DOESN'T GIVE FCERR.
-                          ; IF X IS NEGATIVE AND Y IS ODD, NEGATE THE RESULT
-                          ; RETURNED BY EXP.
-                          ; TO COMPUTE THE RESULT USE X^Y=EXP((Y*LOG(X)).
+* EXPONENTIATION ---  X^Y.
+* N.B.  0^0=1
+* FIRST CHECK IF Y=0. IF SO, THE RESULT IS 1.
+* NEXT CHECK IF X=0. IF SO THE RESULT IS 0.
+* THEN CHECK IF X.GT.0. IF NOT CHECK THAT Y IS AN INTEGER.
+* IF SO, NEGATE X, SO THAT LOG DOESN'T GIVE FCERR.
+* IF X IS NEGATIVE AND Y IS ODD, NEGATE THE RESULT
+* RETURNED BY EXP.
+* TO COMPUTE THE RESULT USE X^Y=EXP((Y*LOG(X)).
 FPWRT    BEQ   EXP        ; IF FAC=0, JUST EXPONENTIATE THAT.
          LDA   ARGEXP     ; IS X=0?
          BNE   FPWRT1
@@ -7619,7 +7583,7 @@ FPWR1    JSR   MOVFA1     ; ALTERNATE ENTRY POINT.
          PLA
          LSR              ; IS IT EVEN?
          BCC   NEGRTS     ; YES. OR X.GT.0.
-                          ; NEGATE THE NUMBER IN FAC.
+* NEGATE THE NUMBER IN FAC.
 NEGOP    LDA   FACEXP
          BEQ   NEGRTS
          COM   FACSGN
@@ -7627,16 +7591,9 @@ NEGRTS   RTS
 
 * PAGE
 * SUBTTL     EXPONENTIATION FUNCTION.
-* FIRST SAVE THE ORIGINAL ARGUMENT AND MULTIPLY THE FAC BY
-* LOG2(E). THE RESULT IS USED TO DETERMINE IF OVERFLOW
-* WILL OCCUR SINCE EXP(X)=2^(X*LOG2(E)) WHERE
-* LOG2(E)=LOG(E) BASE 2. THEN SAVE THE INTEGER PART OF
-* THIS TO SCALE THE ANSWER AT THE END. SINCE
-* 2^Y=2^INT(Y)*2^(Y-INT(Y)) AND 2^INT(Y) IS EASY TO COMPUTE.
-* NOW COMPUTE 2^(X*LOG2(E)-INT(X*LOG2(E)) BY
-* P(LN(2)*(INT(X*LOG2(E))+1)-X) WHERE P IS AN APPROXIMATION
-* POLYNOMIAL. THE RESULT IS THEN SCALED BY THE POWER OF 2
-* PREVIOUSLY SAVED.
+
+* DFG - moved EXP docstring down to EXP
+
 LOGEB2   DFB   $81,$38,$AA,$3B ; LOG(E) BASE 2.
          DO    ADDPRC
          DFB   $29
@@ -7665,6 +7622,16 @@ EXPCON
          DFB   $81,$00,$00,$00,$00 ; 1.0
          FIN
 
+* FIRST SAVE THE ORIGINAL ARGUMENT AND MULTIPLY THE FAC BY
+* LOG2(E). THE RESULT IS USED TO DETERMINE IF OVERFLOW
+* WILL OCCUR SINCE EXP(X)=2^(X*LOG2(E)) WHERE
+* LOG2(E)=LOG(E) BASE 2. THEN SAVE THE INTEGER PART OF
+* THIS TO SCALE THE ANSWER AT THE END. SINCE
+* 2^Y=2^INT(Y)*2^(Y-INT(Y)) AND 2^INT(Y) IS EASY TO COMPUTE.
+* NOW COMPUTE 2^(X*LOG2(E)-INT(X*LOG2(E)) BY
+* P(LN(2)*(INT(X*LOG2(E))+1)-X) WHERE P IS AN APPROXIMATION
+* POLYNOMIAL. THE RESULT IS THEN SCALED BY THE POWER OF 2
+* PREVIOUSLY SAVED.
 EXP
          LDWDI LOGEB2     ; MULTIPLY BY LOG(E) BASE 2.
          JSR   FMULT
@@ -7749,6 +7716,11 @@ POLY4    STWD  POLYPT
          BNE   POLY2
 RANDRT   RTS              ; YES.
 
+* DFG - moved RND docstring down to RND
+
+RMULZC   DFB   $98,$35,$44,$7A
+RADDZC   DFB   $68,$28,$B1,$46
+
 * PSEUDO-RANDOM NUMBER GENERATOR.
 * IF ARG=0, THE LAST RANDOM NUMBER GENERATED IS RETURNED.
 * IF ARG .LT. 0, A NEW SEQUENCE OF RANDOM NUMBERS IS
@@ -7763,9 +7735,6 @@ RANDRT   RTS              ; YES.
 * THE HO AND LOW BYTES WERE SWITCHED SO THERE WILL BE A
 * RANDOM CHANCE OF GETTING A NUMBER LESS THAN OR GREATER
 * THAN .5 .
-
-RMULZC   DFB   $98,$35,$44,$7A
-RADDZC   DFB   $68,$28,$B1,$46
 RND      JSR   SIGN       ; GET SIGN INTO ACCX.
          DO    REALIO#valPET
          TAX              ; GET INTO ACCX, SINCE "MOVFM" USES ACCX.
@@ -7773,10 +7742,10 @@ RND      JSR   SIGN       ; GET SIGN INTO ACCX.
          BMI   RND1       ; START NEW SEQUENCE IF NEGATIVE.
          DO    REALIO=valPET
          BNE   QSETNR
-                          ; TIMERS ARE AT 9044(L0),45(HI),48(LO),49(HI) HEX.
-                          ; FIRST TWO ARE ALWAYS FREE RUNNING.
-                          ; SECOND PAIR IS NOT. LO IS FREER THAN HI THEN.
-                          ; SO ORDER IN FAC IS 44,48,45,49.
+* TIMERS ARE AT 9044(L0),45(HI),48(LO),49(HI) HEX.
+* FIRST TWO ARE ALWAYS FREE RUNNING.
+* SECOND PAIR IS NOT. LO IS FREER THAN HI THEN.
+* SO ORDER IN FAC IS 44,48,45,49.
          LDA   CQHTIM
          STA   FACHO
          LDA   CQHTIM+4
@@ -7923,6 +7892,7 @@ SINCON
 
 * PAGE
 * SUBTTL    ARCTANGENT FUNCTION.
+
 * USE IDENTITIES TO GET ARG BETWEEN 0 AND 1 AND THEN USE AN
 * APPROXIMATION POLYNOMIAL TO COMPUTE ARCTAN(X).
 ATN      LDA   FACSGN     ; WHAT IS SIGN?
@@ -8220,7 +8190,7 @@ USEDEF                    ; HIGHEST ADDRESS.
          DO    REALIO+LONGI=0
          LDWDI 16190      ; A STRANGE NUMBER.
          FIN
-                          ; Applesoft available RAM memory search /alloction routines
+* Applesoft available RAM memory search /alloction routines
          DO    swAPPLE2   ; DFG - used RAMLOC below instead of Davis symbol
          LDA   #<RAMLOC   ; Get Start of Program Memory, Low (=0)
          LDY   #>RAMLOC   ; Get Start of Program Memory, High
@@ -8250,10 +8220,9 @@ MEMFND   LDY   LINNUM     ; Get Memory Scan Pointer, Low (=0)
          STWD  MEMSIZ     ; THIS IS THE SIZE OF MEMORY.
          STWD  FRETOP     ; TOP OF STRINGS TOO.
          FIN
-                          ;
-                          ; Teletype support of original Microsoft BASIC source code ... ancient.
-                          ; Applesoft uses none of that code, OSI does.
-                          ;
+
+* Teletype support of original Microsoft BASIC source code ... ancient.
+* Applesoft uses none of that code, OSI does.
 TTYW
          DO    {swAPPLE2=0}*{{REALIO=valPET}=0}
          DO    REALIO+LONGI
@@ -8348,11 +8317,10 @@ QROOM    LDWD  TXTTAB     ; PREPARE TO USE "REASON".
          DO    swOSI=0
          JSR   SCRTCH     ; SET UP EVERYTHING ELSE.
          FIN
-                          ;
-                          ; The JSR SCRTCH above is the last instruction of the original Microsoft
-                          ; source code used by Applesoft. All the leftover original source code
-                          ; below until the ***APPLESOFT*** comment is unused.
-                          ;
+
+* The JSR SCRTCH above is the last instruction of the original Microsoft
+* source code used by Applesoft. All the leftover original source code
+* below until the ***APPLESOFT*** comment is unused.
          DO    REALIO=valPET
          JMP   READY
          FIN

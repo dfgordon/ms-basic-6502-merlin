@@ -1,4 +1,5 @@
-* Equates related to "primitive Apple BASIC" (without extensions)
+* Equates related to "primitive Apple BASIC" (without extensions), that are
+* nevertheless referenced by the extensions.
 *
 * These are zero-page locations extracted from the symbol
 * table that falls out of the dummy zero-page section in

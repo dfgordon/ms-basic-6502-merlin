@@ -1,4 +1,5 @@
 * applesoft.head: Applesoft header with equates
+*
 * DFG - In the UB package this was a global header, here
 * it is only used by the extension modules.
 *

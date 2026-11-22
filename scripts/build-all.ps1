@@ -26,16 +26,17 @@ if (-not (Test-Path -Path ".\build" -PathType Container)) {
     $null = New-Item -Path ".\build" -ItemType Directory
 }
 
+# N.b. the last case is the one that will determine the final state of the switchbox
 $cases = @(
-    @{Name="kim";           RealIO="valKIM";   Sw=@("swKIM");             Src="MSB6502.S"},
     @{Name="kim.primitive"; RealIO="valKIM";   Sw=@();                    Src="MSB6502.S"},
-    @{Name="osi";           RealIO="valOSI";   Sw=@("swOSI");             Src="MSB6502.S"},
+    @{Name="kim";           RealIO="valKIM";   Sw=@("swKIM");             Src="MSB6502.S"},
     @{Name="osi.primitive"; RealIO="valOSI";   Sw=@();                    Src="MSB6502.S"},
+    @{Name="osi";           RealIO="valOSI";   Sw=@("swOSI");             Src="MSB6502.S"},
     @{Name="osi.ubfix";     RealIO="valOSI";   Sw=@("swOSI","swOSIFIX");  Src="MSB6502.S"},
-    @{Name="pet1";          RealIO="valPET";   Sw=@("swPET");             Src="MSB6502.S"},
     @{Name="pet1.primitive";RealIO="valPET";   Sw=@();                    Src="MSB6502.S"},
-    @{Name="apple";         RealIO="valApple"; Sw=@("swAPPLE2");          Src="link_apple.S"},
-    @{Name="apple.primitive";RealIO="valApple";Sw=@();                    Src="MSB6502.S"}
+    @{Name="pet1";          RealIO="valPET";   Sw=@("swPET");             Src="MSB6502.S"},
+    @{Name="apple.primitive";RealIO="valApple";Sw=@();                    Src="MSB6502.S"},
+    @{Name="apple";         RealIO="valApple"; Sw=@("swAPPLE2");          Src="link_apple.S"}
 )
 $validSwitches = @('swKIM', 'swOSI', 'swOSIFIX', 'swPET', 'swAPPLE2')
 

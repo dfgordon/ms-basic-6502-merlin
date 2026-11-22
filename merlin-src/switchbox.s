@@ -49,5 +49,5 @@ swKIM      EQU   0
 swOSI      EQU   0
 swOSIFIX   EQU   0
 swPET      EQU   0
-swAPPLE2   EQU   0
+swAPPLE2   EQU   1
 
