@@ -1,4 +1,4 @@
-# Microsoft BASIC Sources
+# Historical Microsoft BASIC in Cross-Assembler-Ready Form
 
 ## Origins
 
@@ -9,7 +9,7 @@ It was quickly ported to modern cross-assemblers, first by "Uncle Bernie" (UB), 
 * UB ported to the DASM cross-assembler, and importantly, added patches and extensions from the various vendors
 * DFG ported the UB package to the Merlin 32 cross-assembler
 
-Years earlier the source code was leaked and analyzed by Michael Steil, see [here](https://www.pagetable.com/135).
+Years earlier a leaked version of the source code was analyzed by Michael Steil, see [here](https://www.pagetable.com/135).
 
 ## Motivation
 
